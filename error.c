@@ -32,7 +32,7 @@ int _pputchar(char c)
 		y = 0;
 	}
 	if (c != BUF_FLUSH)
-		buf[y++] = c;
+		buff[y++] = c;
 	return (1);
 }
 /**
@@ -60,7 +60,7 @@ int _putpd(char c, int pd)
  * @pd: filedescriptor
  * Return: returns number
  */
-int _putspd(char *srt int pd)
+int _putspd(char *srt, int pd)
 {
 	int y = 0;
 

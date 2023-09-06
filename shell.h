@@ -85,4 +85,10 @@ int _unsetenv(info_t *, char *);
 int _setenv(info_t *, char *, char *);
 list_t *end_add_node(list_t **, const char *, int);
 
+/* the error.c */
+void _pputs(char *srt);
+int _pputchar(char c);
+int _putpd(char c, int pd);
+int _putspd(char *srt, int pd);
+
 #endif
