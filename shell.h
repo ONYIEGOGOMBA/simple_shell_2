@@ -103,4 +103,9 @@ int print_f(int putin, int pd);
 char *number_converter(long int numb, int bas, int lagg);
 void comments_remove(char *puf);
 
+/* the exit.c */
+char *_strcpy(char *dess, char *scr, int f);
+char *_strcat(char *dess, char *scr, int f);
+char *_strhr(char *b, char o);
+
 #endif

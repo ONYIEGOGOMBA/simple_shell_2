@@ -44,7 +44,7 @@ char *_strcat(char *dess, char *scr, int f)
 	k = 0;
 	while (dess[y] != '\0')
 		y++;
-	while (src[k] != '\0' && k < f)
+	while (scr[k] != '\0' && k < f)
 	{
 		dess[y] = scr[k];
 		y++;
