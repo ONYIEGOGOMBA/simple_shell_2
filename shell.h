@@ -21,7 +21,7 @@ extern char **environ;
 typedef struct liststr
 {
 	int bam;
-	char *str;
+	char *srt;
 	struct liststr *next;
 } list_t;
 typedef struct infopass
@@ -32,6 +32,10 @@ typedef struct infopass
 	int status;
 	int err_num;
 	int readpd;
+	list_t *alias;
+	list_t *histo;
+	int argc;
+
 
 }info_t;
 
@@ -57,5 +61,21 @@ char *_strcmp(char *, char *);
 int _prratoi(char *);
 char *_getenv(info_t *, const char *);
 void print_error(info_t *, char *);
+
+/* the atoil.c*/
+int interact(info_t *info);
+int is_dell(char o, char *deli);
+int is_alpha(int o);
+int a_toil(char *b);
+
+/* the builtin.c */
+char *_strchr(char *, char);
+int my_histo(info_t *);
+int my_alias(info_t *);
+list_t *add_node(list_t **, const char *, int);
+int delete_node(list_t **, unsigned int);
+list_t *node_start(list_t *, char *, char);
+ssize_t get_node(list_t *, list_t *);
+size_t print_list(const list_t *);
 
 #endif
