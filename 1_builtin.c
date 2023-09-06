@@ -42,9 +42,9 @@ int my_cd(info_t *info)
 	{
 		bog = _getenv(info, "home=");
 		if (bog)
-			chng_dir = chng((bog = _getenv(info, "PWD=")) ? bog : "/");
+			chng_dir = chdir((bog = _getenv(info, "PWD=")) ? bog : "/");
 		else
-			chng_dir = chng(bog);
+			chng_dir = chdir(bog);
 	}
 	else if (_strcmp(info->argv[1], "_") == 0)
 	{
@@ -56,10 +56,10 @@ int my_cd(info_t *info)
 		}
 		_puts(_getenv(info, "oldpwd=")), _putchar('\n');
 		chng_dir =
-			chng((bog = _getenv(info, "oldpwd=")) ? bog : "/");
+			chdir((bog = _getenv(info, "oldpwd=")) ? bog : "/");
 	}
 	else
-		chng_dir = chng(info->argv[1]);
+		chng_dir = chdir(info->argv[1]);
 	if (chng_dir == -1)
 	{
 		print_error(info, "can't cd to");
