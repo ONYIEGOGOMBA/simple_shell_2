@@ -31,6 +31,7 @@ typedef struct infopass
 	list_t *env;
 	int status;
 	int err_num;
+	int readpd;
 
 }info_t;
 
