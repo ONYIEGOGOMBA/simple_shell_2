@@ -35,7 +35,7 @@ void prints_error(info_t *info, char *esrt)
 {
 	_pputs(info->fname);
 	_pputs(": ");
-	print_f(info->line_count, STDERR_FILENO);
+	print_f(info->line_spell, STDERR_FILENO);
 	_pputs(": ");
 	_pputs(info->argv[0]);
 	_pputs(": ");
@@ -54,11 +54,11 @@ int print_f(int putin, int pd)
 	unsigned int _gob_, curr;
 
 	if (pd == STDERR_FILENO)
-		_dputchar = _pputchar;
-	if (input < 0)
+		_putchar = _pputchar;
+	if (putin < 0)
 	{
 		_gob_ = -putin;
-		_dputchar('-');
+		_putchar('-');
 		spell++;
 	}
 	else
@@ -68,12 +68,12 @@ int print_f(int putin, int pd)
 	{
 		if (_gob_ / y)
 		{
-			_dputchar('0' + curr / y);
+			_putchar('0' + curr / y);
 			spell++;
 		}
 		curr %= y;
 	}
-	_dputchar('0' + curr);
+	_putchar('0' + curr);
 	spell++;
 	return (spell);
 }
@@ -92,7 +92,7 @@ char *number_converter(long int numb, int bas, int lagg)
 	char *prt;
 	unsigned long f = numb;
 
-	if (!(laggs & CONVERT_UNSIGNED) && numb < 0)
+	if (!(lagg & CONVERT_UNSIGNED) && numb < 0)
 	{
 		f = -numb;
 		signal = '-';

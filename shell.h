@@ -16,6 +16,9 @@
 #define WRITE_BUF_SIZE 1024
 #define BUF_FLUSH -1
 
+#define CONVERT_LOWERCASE	1
+#define CONVERT_UNSIGNED	2
+
 extern char **environ;
 
 typedef struct liststr
@@ -35,6 +38,8 @@ typedef struct infopass
 	list_t *alias;
 	list_t *histo;
 	int argc;
+	char *fname;
+	unsigned int line_spell;
 
 
 }info_t;
@@ -90,5 +95,12 @@ void _pputs(char *srt);
 int _pputchar(char c);
 int _putpd(char c, int pd);
 int _putspd(char *srt, int pd);
+
+/* the error1.c */
+int _errortoi(char *b);
+void prints_error(info_t *info, char *esrt);
+int print_f(int putin, int pd);
+char *number_converter(long int numb, int bas, int lagg);
+void comments_remove(char *puf);
 
 #endif
