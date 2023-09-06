@@ -78,4 +78,11 @@ list_t *node_start(list_t *, char *, char);
 ssize_t get_node(list_t *, list_t *);
 size_t print_list(const list_t *);
 
+/* the env.c */
+size_t print_list_srt(const list_t *);
+char *start_with(const char *, const char *);
+int _unsetenv(info_t *, char *);
+int _setenv(info_t *, char *, char *);
+list_t *end_add_node(list_t **, const char *, int);
+
 #endif

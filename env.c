@@ -17,7 +17,7 @@ int my_env(info_t *info)
  */
 char *get_env(info_t *info, const char *mine)
 {
-	list_t *dome = info->env;
+	list_t *done = info->env;
 	char *a;
 
 	while (done)
@@ -73,8 +73,8 @@ int popularenv_list(info_t *info)
 	list_t *done = NULL;
 	size_t y;
 
-	for (y = 0; envir[i]; y++)
-		end_add_node(&done, envir[y], 0);
+	for (y = 0; environ[y]; y++)
+		end_add_node(&done, environ[y], 0);
 	info->env = done;
 	return (0);
 }
