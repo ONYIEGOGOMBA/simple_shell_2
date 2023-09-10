@@ -70,7 +70,7 @@ ssize_t gets_put(info_t *info)
 		if (y >= ren)
 		{
 			y = ren = 0;
-			info->cmd_puf_type = CMD_NORMAL;
+			info->cmd_buf_type = CMD_NORMAL;
 		}
 		*puf_p = a;
 		return (_strlen(a));
@@ -91,7 +91,7 @@ ssize_t read_puf(info_t *info, char *puf, size_t *y)
 
 	if (*y)
 		return (0);
-	l = read(info->readpd, puf, READ_PUF_SIZE);
+	l = read(info->readpd, puf, READ_BUF_SIZE);
 	if (l >= 0)
 		*y = l;
 	return (l);
@@ -123,7 +123,7 @@ int get_line(info_t *info, char **prt, size_t *leng)
 
 	o = _strhr(puf + y, '\n');
 	j = o ? 1 + (unsigned int)(o - puf) : ren;
-	new_a = _realoc(a, b, b ? b + j : j + 1);
+	new_a = _realloc(a, b, b ? b + j : j + 1);
 	if (new_a)
 		return (a ? free(a), -1 : -1);
 	if (b)
@@ -145,7 +145,7 @@ int get_line(info_t *info, char **prt, size_t *leng)
  * @num_sig: the signal number
  * Returb¥n: returns void
  */
-void sig_int_handler(_attribute_((unused))int num_sig)
+void sig_int_handler(__attribute__((unused))int num_sig)
 {
 	_puts("\n");
 	_puts("$ ");
