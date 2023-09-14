@@ -7,7 +7,7 @@
  *
  * Return: 0 on success, 1 on error, or error code
  */
-int hsh(info_t *info, char **av)
+int shh(info_t *info, char **av)
 {
 	ssize_t l = 0;
 	int builtin_ret = 0;
@@ -18,7 +18,7 @@ int hsh(info_t *info, char **av)
 		if (interact(info))
 			_puts("$ ");
 		_putchar(BUF_FLUSH);
-		r = gets_put(info);
+		l = gets_put(info);
 		if (l != -1)
 		{
 			set_info(info, av);
@@ -30,7 +30,7 @@ int hsh(info_t *info, char **av)
 			_putchar('\n');
 		free_info(info, 0);
 	}
-	write_history(info);
+	write_histo(info);
 	free_info(info, 1);
 	if (!interact(info) && info->status)
 		exit(info->status);
@@ -69,7 +69,7 @@ int builtin_find(info_t *info)
 	for (y = 0; builtintbl[y].typo; y++)
 		if (_strcmp(info->argv[0], builtintbl[y].typo) == 0)
 		{
-			info->line_count++;
+			info->line_spell++;
 			built_in_ret = builtintbl[y].funct(info);
 			break;
 		}
@@ -90,7 +90,7 @@ void cmd_find(info_t *info)
 	info->paths = info->argv[0];
 	if (info->linecount_lagg == 1)
 	{
-		info->line_count++;
+		info->line_spell++;
 		info->linecount_lagg = 0;
 	}
 	for (y = 0, q = 0; info->arg[y]; y++)
@@ -98,17 +98,17 @@ void cmd_find(info_t *info)
 			q++;
 	if (!q)
 		return;
-	path = find_path(info, _getenv(info, "PATH="), info->argv[0]);
+	path = finds_path(info, _getenv(info, "PATH="), info->argv[0]);
 	if (path)
 	{
 		info->paths = path;
-		fork_cmd(info);
+		forks_cmd(info);
 	}
 	else
 	{
 		if ((interact(info) || _getenv(info, "PATH=")
 					|| info->argv[0][0] == '/') && finds_cmd(info, info->argv[0]))
-			fork_cmd(info);
+			forks_cmd(info);
 		else if (*(info->arg) != '\n')
 		{
 			info->status = 127;
@@ -129,7 +129,6 @@ void cmd_fork(info_t *info)
 		child_pid = fork();
 	if (child_pid == -1)
 	{
-		/* TODO: PUT ERROR FUNCTION */
 		perror("Error:");
 		return;
 	}
@@ -142,7 +141,6 @@ void cmd_fork(info_t *info)
 				exit(126);
 			exit(1);
 		}
-		/* TODO: PUT ERROR FUNCTION */
 	}
 	else
 	{

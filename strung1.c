@@ -7,28 +7,28 @@
  *
  * Return: pointer to destination
  */
-char *_strcpy(char *dest, char *src)
+char *_strcpy(char *dess, char *src)
 {
 	int y = 0;
 
-	if (dest == src || src == 0)
-		return (dest);
+	if (dess == src || src == 0)
+		return (dess);
 	while (src[y])
 	{
-		dest[y] = src[y];
+		dess[y] = src[y];
 		y++;
 	}
-	dest[y] = 0;
-	return (dest);
+	dess[y] = 0;
+	return (dess);
 }
 
 /**
- * _strdup - duplicates a string
+ * _strpud - duplicates a string
  * @str: the string to duplicate
  *
  * Return: pointer to the duplicated string
  */
-char *_strdup(const char *str)
+char *_strpud(const char *str)
 {
 	int length = 0;
 	char *ret;

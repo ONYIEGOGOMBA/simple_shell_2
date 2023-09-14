@@ -131,7 +131,6 @@ char *number_converter(long int numb, int bas, int lagg);
 void comments_remove(char *puf);
 
 /* the exit.c */
-char *_strcpy(char *dess, char *scr, int f);
 char *_strcat(char *dess, char *scr, int f);
 char *_strhr(char *b, char o);
 
@@ -190,6 +189,8 @@ char *path_find(info_t *info, char *pathstr, char *cmd);
 
 /* the strung.c */
 char *with_starts(const char *haystack, const char *needle);
+int _strlen(char *s);
+
 
 /* the reallocate.c */
 void pfree(char **pp);
@@ -198,6 +199,8 @@ void pfree(char **pp);
 int builtin_find(info_t *info);
 void cmd_find(info_t *info);
 void cmd_fork(info_t *info);
+char *finds_path(info_t *, char *, char *);
+void forks_cmd(info_t *);
 
 /* the list.c */
 list_t *add_done(list_t **head, const char *str, int numb);
@@ -215,6 +218,9 @@ size_t gets_done_index(list_t *h, list_t *done);
 
 /* the strung1.c */
 int _putchar(char);
+char *_strcpy(char *, char *);
+void _puts(char *str);
+void finds_cmd(info_t *);
 
 /* the mercury.c */
 void chain_check(info_t *info, char *puf, size_t *a, size_t y, size_t ren);
