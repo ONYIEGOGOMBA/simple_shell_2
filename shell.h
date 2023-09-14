@@ -21,6 +21,9 @@
 #define CONVERT_LOWERCASE	1
 #define CONVERT_UNSIGNED	2
 
+#define HISTO_FILE	".simple_shell_history"
+#define HISTO_MAX	4096
+
 extern char **environ;
 
 typedef struct liststr
@@ -50,6 +53,7 @@ typedef struct infopass
 	int env_change;
 	char **cmd_puf;
 	char *paths;
+	char **environ;
 
 
 
@@ -61,6 +65,12 @@ typedef struct infopass
 #define INFO_INIT \
 {NULL, NULL, NULL, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, \
 	0, 0, 0}
+
+struct info_t
+{
+	char *paths;
+};
+
 typedef struct builtin
 {
 	char *typo;
@@ -162,5 +172,16 @@ int cfree(void **);
 int replace_alia(info_t *);
 int replace_var(info_t *);
 void free_lists(list_t **);
+
+/* the histo.c */
+char *get_histo_file(info_t *info);
+int write_histo(info_t *info);
+int read_histo(info_t *info);
+int build_histo_list(info_t *info, char *puf, int linespell);
+int renumber_histo(info_t *info);
+
+/* the main.c */
+int shh(info_t *, char **);
+int pops_env_list(info_t *);
 
 #endif

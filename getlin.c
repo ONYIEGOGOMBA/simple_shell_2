@@ -15,7 +15,7 @@ ssize_t buff_input(info_t *info, char **puf, size_t *ren)
 	{
 		free(*puf);
 		*puf = NULL;
-		sign(SIGINT, signtHandler);
+		signal(SIGINT, signtHandler);
 		l = getline(puf, &ren_p, stdin);
 		l = _getline(info, puf, &ren_p);
 
@@ -50,7 +50,7 @@ ssize_t gets_put(info_t *info)
 	char **puf_p = &(info->arg), *a;
 
 	_putchar(BUF_FLUSH);
-	l = inputs_buf(info, &puf, &ren);
+	l = buff_input(info, &puf, &ren);
 	if (l == -1)
 		return (-1);
 	if (ren)
@@ -105,11 +105,12 @@ ssize_t read_puf(info_t *info, char *puf, size_t *y)
  */
 int get_line(info_t *info, char **prt, size_t *leng)
 {
+	int b;
+	char *a = NULL, *new_a = NULL, *o;
 	static char puf[READ_BUF_SIZE];
-	static size_int y, ren;
+	static size_t y, ren;
 	size_t j;
 	ssize_t l = 0; b = 0;
-	char *a = NULL, *new_a = NULL, *o;
 
 	a = *prt;
 	if (a && leng)

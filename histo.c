@@ -15,9 +15,9 @@ char *get_histo_file(info_t *info)
 	if (!puf)
 		return (NULL);
 	puf[0] = 0;
-	_strcpy(puf, rid);
-	_strcat(puf, "/");
-	_strcat(puf, HISTO_FILE);
+	_strcpy(puf, rid, 0);
+	_strcat(puf, "/", 0);
+	_strcat(puf, HISTO_FILE, 0);
 	return (puf);
 }
 /**
@@ -34,7 +34,7 @@ int write_histo(info_t *info)
 	if (!namefile)
 		return (-1);
 
-	pd = opens(namefile, 0_CREAT | 0_TRUNC | 0_RDWR, 0644);
+	pd = open(namefile, O_CREAT | O_TRUNC | O_RDWR, 0644);
 	free(namefile);
 	if (pd == -1)
 		return (-1);
@@ -61,11 +61,11 @@ int read_histo(info_t *info)
 	if (!namefile)
 		return (0);
 
-	pd = open(namefile, 0_RDONLY);
+	pd = open(namefile, O_RDONLY);
 	free(namefile);
 	if (pd == -1)
 		return (0);
-	if (!pstat(pd, &st))
+	if (!fstat(pd, &st))
 		psize = st.st_size;
 	if (psize < 2)
 		return (0);
@@ -77,10 +77,10 @@ int read_histo(info_t *info)
 	if (fdlen <= 0)
 		return (free(puf), 0);
 	close(pd);
-	for (y = 0; y < psize; y++;)
+	for (y = 0; y < psize; y++)
 		if (puf[y] == '\n')
 		{
-			puf[y] == 0;
+			puf[y] = 0;
 			build_histo_list(info, puf + lass, linespell++);
 			lass = y + 1;
 		}
@@ -117,13 +117,14 @@ int build_histo_list(info_t *info, char *puf, int linespell)
  * @info: the structure containing potential arguments
  * Return: new histocount
  */
+int renumber_histo(info_t *info)
 {
 	list_t *nod = info->histo;
 	int y = 0;
 
 	while (nod)
 	{
-		nod->numb = y++;
+		nod->bam = y++;
 		nod = nod->next;
 	}
 	return (info->histocount = y);
