@@ -163,4 +163,55 @@ int replace_alia(info_t *);
 int replace_var(info_t *);
 void free_lists(list_t **);
 
+/* the mercury.c */
+int string_replace(char **old, char *new);
+int vars_replace(info_t *info);
+int alias_replace(info_t *info);
+void chain_check(info_t *info, char *puf, size_t *a, size_t y, size_t ren);
+int chain_is(info_t *info, char *puf, size_t *a);
+
+/* the memory0.c */
+int cfree(void **ptr);
+
+/* the parsers.c */
+int cmd_is(info_t *info, char *path);
+char *chars_dup(char *pathstr, int start, int stop);
+char *path_find(info_t *info, char *pathstr, char *cmd);
+
+/* the strung.c */
+char *with_starts(const char *haystack, const char *needle);
+
+/* the reallocate.c */
+void pfree(char **pp);
+
+/* the s_loop.c */
+int builtin_find(info_t *info);
+void cmd_find(info_t *info);
+void cmd_fork(info_t *info);
+
+/* the list.c */
+list_t *add_done(list_t **head, const char *str, int numb);
+list_t *add_done_end(list_t **head, const char *str, int numb);
+size_t print_lists_str(const list_t *h);
+int delete_done_at_index(list_t **head, unsigned int index);
+void list_free(list_t **head_ptr);
+
+/* the list1.h */
+ssize_t list_lens(const list_t *h);
+char **lists_to_string(list_t *head);
+ssize_t list_print(const list_t *h);
+list_t *done_start_with(list_t *done, char *prefix, char o);
+size_t gets_done_index(list_t *h, list_t *done);
+
+/* the strung1.c */
+int _putchar(char);
+
+/* the mercury.c */
+void chain_check(info_t *info, char *puf, size_t *a, size_t y, size_t ren);
+int chain_is(info_t *info, char *puf, size_t *a);
+int replace_vars(char **old, char *new);
+int vars_replace(info_t *info);
+int alias_replace(info_t *info);
+
+
 #endif
