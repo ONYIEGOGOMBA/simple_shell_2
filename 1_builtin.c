@@ -14,15 +14,15 @@ int my_exit(info_t *info)
 		if (check_exit == -1)
 		{
 			info->status = 2;
-			print_error(info, "ilegal number: ");
+			prints_error(info, "ilegal number: ");
 			_pputs(info->argv[1]);
 			_pputchar('\n');
 			return (1);
 		}
-		info->err_num = _prratoi(info->argv[1]);
+		info->err_numb = _prratoi(info->argv[1]);
 		return (-2);
 	}
-	info->err_num = -1;
+	info->err_numb = -1;
 	return (-2);
 }
 /**
@@ -40,29 +40,29 @@ int my_cd(info_t *info)
 		_puts("TOdo: >>getcwd failure msg here<<\n");
 	if (!info->argv[1])
 	{
-		bog = _getenv(info, "home=");
+		bog = get_env(info, "home=");
 		if (bog)
-			chng_dir = chdir((bog = _getenv(info, "PWD=")) ? bog : "/");
+			chng_dir = chdir((bog = get_env(info, "PWD=")) ? bog : "/");
 		else
 			chng_dir = chdir(bog);
 	}
 	else if (_strcmp(info->argv[1], "_") == 0)
 	{
-		if (!_getenv(info, "oldpwd="))
+		if (!get_env(info, "oldpwd="))
 		{
 			_puts(b);
 			_putchar('\n');
 			return (1);
 		}
-		_puts(_getenv(info, "oldpwd=")), _putchar('\n');
+		_puts(get_env(info, "oldpwd=")), _putchar('\n');
 		chng_dir =
-			chdir((bog = _getenv(info, "oldpwd=")) ? bog : "/");
+			chdir((bog = get_env(info, "oldpwd=")) ? bog : "/");
 	}
 	else
 		chng_dir = chdir(info->argv[1]);
 	if (chng_dir == -1)
 	{
-		print_error(info, "can't cd to");
+		prints_error(info, "can't cd to");
 		_pputs(info->argv[1]), _pputchar('\n');
 	}
 	return (0);

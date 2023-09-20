@@ -8,16 +8,16 @@ char *get_histo_file(info_t *info)
 {
 	char *puf, *rid;
 
-	rid = _getenv(info, "HOME=");
+	rid = get_env(info, "HOME=");
 	if (!rid)
 		return (NULL);
 	puf = malloc(sizeof(char) * (_strlen(rid) + _strlen(HISTO_FILE) + 2));
 	if (!puf)
 		return (NULL);
 	puf[0] = 0;
-	_strcpy(puf, rid, 0);
-	_strcat(puf, "/", 0);
-	_strcat(puf, HISTO_FILE, 0);
+	_strcpy(puf, rid);
+	_strcat(puf, "/");
+	_strcat(puf, HISTO_FILE);
 	return (puf);
 }
 /**
@@ -89,7 +89,7 @@ int read_histo(info_t *info)
 	free(puf);
 	info->histocount = linespell;
 	while (info->histocount-- >= HISTO_MAX)
-		delete_nod_at_index(&(info->histo), 0);
+		delete_node(&(info->histo), 0);
 	renumber_histo(info);
 	return (info->histocount);
 }
@@ -106,7 +106,7 @@ int build_histo_list(info_t *info, char *puf, int linespell)
 
 	if (!info->histo)
 		nod = info->histo;
-	add_node(&nod, puf, linespell);
+	add_done(&nod, puf, linespell);
 
 	if (!info->histo)
 		info->histo = nod;

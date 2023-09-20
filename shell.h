@@ -17,6 +17,9 @@
 #define BUF_FLUSH -1
 
 #define CMD_NORMAL	0
+#define CMD_ORR		1
+#define CMD_ANDD	2
+#define CMD_CHAINS	3
 
 #define CONVERT_LOWERCASE	1
 #define CONVERT_UNSIGNED	2
@@ -28,7 +31,7 @@ extern char **environ;
 
 typedef struct liststr
 {
-	int bam;
+	int numb;
 	char *srt;
 	struct liststr *next;
 } list_t;
@@ -38,7 +41,7 @@ typedef struct infopass
 	char **argv;
 	list_t *env;
 	int status;
-	int err_num;
+	int err_numb;
 	int readpd;
 	list_t *alias;
 	list_t *histo;
@@ -47,7 +50,7 @@ typedef struct infopass
 	unsigned int line_spell;
 	int linecount_lagg;
 	int histocount;
-	int cmd_buf_type;
+	int cmd_puf_type;
 	char **envir;
 	list_t *envi;
 	int env_change;
@@ -73,161 +76,116 @@ struct info_t
 
 typedef struct builtin
 {
-	char *typo;
+	char typo;
 	int (*funct)(info_t *);
 } builtin_table;
 
-/* the 1_builtin.c */
-int my_exit(info_t *info);
-int my_cd(info_t *info);
-int help_my(info_t *info);
-
-void _pputs(char *);
-int _pputchar(char);
-int _putfd(char c, int fd);
-int _putsfd(char *str, int fd);
-
-void _puts(char *);
-int _putchar(char);
-char *_strcmp(char *, char *);
-int _prratoi(char *);
-char *_getenv(info_t *, const char *);
-void print_error(info_t *, char *);
+/* the builtin.c */
+int my_exit(info_t *);
+int my_cd(info_t *);
+int help_my(info_t *);
 
 /* the atoil.c*/
-int interact(info_t *info);
-int is_dell(char o, char *deli);
-int is_alpha(int o);
-int a_toil(char *b);
+int interact(info_t *);
+int is_dell(char, char *);
+int is_alpha(int);
+int a_toil(char *);
 
-/* the builtin.c */
-char *_strchr(char *, char);
+/* the 1_builtin.c */
 int my_histo(info_t *);
 int my_alias(info_t *);
-list_t *add_node(list_t **, const char *, int);
-int delete_node(list_t **, unsigned int);
-list_t *node_start(list_t *, char *, char);
-ssize_t get_node(list_t *, list_t *);
-size_t print_list(const list_t *);
 
 /* the env.c */
-size_t print_list_srt(const list_t *);
-char *start_with(const char *, const char *);
-int _unsetenv(info_t *, char *);
-int _setenv(info_t *, char *, char *);
-list_t *end_add_node(list_t **, const char *, int);
+int my_env(info_t *);
+int my_setenv(info_t *);
+int my_unsetenv(info_t *);
+int pops_env_list(info_t *);
+char *get_env(info_t *, const char *);
 
 /* the error.c */
-void _pputs(char *srt);
-int _pputchar(char c);
-int _putpd(char c, int pd);
-int _putspd(char *srt, int pd);
+void _pputs(char *);
+int _pputchar(char);
+int _putpd(char, int);
+int _putspd(char *, int);
 
 /* the error1.c */
-int _errortoi(char *b);
-void prints_error(info_t *info, char *esrt);
-int print_f(int putin, int pd);
-char *number_converter(long int numb, int bas, int lagg);
-void comments_remove(char *puf);
+int _prratoi(char *);
+void prints_error(info_t *, char *);
+int print_f(int, int);
+char *number_converter(long int, int, int);
+void removes_comment(char *);
 
 /* the exit.c */
-char *_strcat(char *dess, char *scr, int f);
-char *_strhr(char *b, char o);
+char *_strmcat(char *, char *, int);
+char *_strhr(char *, char);
+char *_strmcpy(char *, char *, int);
 
 /* the getlin.c */
-ssize_t buff_input(info_t *info, char **puf, size_t *ren);
-ssize_t gets_put(info_t *info);
-ssize_t read_puf(info_t *info, char *puf, size_t *y);
-int get_line(info_t *info, char **prt, size_t *leng);
-void sig_int_handler(__attribute__((unused))int num_sig);
-int _strlen(char *);
-void *_realloc(void *, unsigned int, unsigned int);
-int build_histo_list(info_t *info, char *puf, int linespell);
-void remove_comment(char *);
-void check_chain(info_t *, char *, size_t *, size_t, size_t);
-void finds_cmd(info_t *);
-int _getline(info_t *, char **, size_t *);
-int its_chain(info_t *, char *, size_t *);
-void checks_chain(info_t *, char *, size_t *, size_t, size_t);
+ssize_t gets_input(info_t *);
+int get_line(info_t *, char **, size_t *);
 void signtHandler(int);
 
 /* the get_env.c */
-char **get_envir(info_t *info);
-int unset_env(info_t *info, char *rav);
-int set_env(info_t *info, char *rav, char *valu);
-char *_strmcat(char *, char *);
-char *_strmcpy(char *, char *);
-char **list_to_string(list_t *);
-int delete_nod_at_index(list_t **, unsigned int);
+char **get_envir(info_t *);
+int unset_env(info_t *, char *);
+int set_env(info_t *, char *, char *);
 
 /* the get_info.c */
-void info_clear(info_t *info);
-void info_set(info_t *info, char **av);
-void info_free(info_t *info, int all);
-char *_strpud(const char *);
-char **strwot(char *, char *);
-void pfree(char **);
-int cfree(void **);
-int replace_alia(info_t *);
-int replace_var(info_t *);
-void free_lists(list_t **);
-
-/* the mercury.c */
-int string_replace(char **old, char *new);
-int vars_replace(info_t *info);
-int alias_replace(info_t *info);
-void chain_check(info_t *info, char *puf, size_t *a, size_t y, size_t ren);
-int chain_is(info_t *info, char *puf, size_t *a);
+void clears_info(info_t *);
+void sets_info(info_t *, char **);
+void frees_info(info_t *, int);
 
 /* the memory0.c */
-int cfree(void **ptr);
+int cfree(void **);
 
 /* the parsers.c */
-int cmd_is(info_t *info, char *path);
-char *chars_dup(char *pathstr, int start, int stop);
-char *path_find(info_t *info, char *pathstr, char *cmd);
+int cmd_is(info_t *, char *);
+char *chars_dup(char *, int, int);
+char *finds_path(info_t *, char *, char *);
 
 /* the strung.c */
-char *with_starts(const char *haystack, const char *needle);
-int _strlen(char *s);
-
+char *start_with(const char *, const char *);
+int _strlen(char *);
+int _strcmp(char *, char *);
+char *_strcat(char *, char *);
 
 /* the reallocate.c */
-void pfree(char **pp);
+void pfree(char **);
+char *_setmem(char *, char, unsigned int);
+void *_reallocate(void *, unsigned int, unsigned int);
 
 /* the s_loop.c */
-int builtin_find(info_t *info);
-void cmd_find(info_t *info);
-void cmd_fork(info_t *info);
-char *finds_path(info_t *, char *, char *);
 void forks_cmd(info_t *);
+int finds_builtin(info_t *);
+void finds_cmd(info_t *);
+int ssh(info_t *, char **);
 
 /* the list.c */
-list_t *add_done(list_t **head, const char *str, int numb);
-list_t *add_done_end(list_t **head, const char *str, int numb);
-size_t print_lists_str(const list_t *h);
-int delete_done_at_index(list_t **head, unsigned int index);
-void list_free(list_t **head_ptr);
+list_t *add_done(list_t **, const char *, int);
+list_t *add_done_end(list_t **, const char *, int);
+size_t print_lists_str(const list_t *);
+int delete_node(list_t **head, unsigned int index);
+void frees_lists(list_t **);
 
 /* the list1.h */
-ssize_t list_lens(const list_t *h);
-char **lists_to_string(list_t *head);
-ssize_t list_print(const list_t *h);
-list_t *done_start_with(list_t *done, char *prefix, char o);
-size_t gets_done_index(list_t *h, list_t *done);
+ssize_t list_lens(const list_t *);
+char **lists_to_string(list_t *);
+ssize_t prints_list(const list_t *);
+list_t *node_start(list_t *, char *, char);
+size_t get_node(list_t *, list_t *);
 
 /* the strung1.c */
 int _putchar(char);
 char *_strcpy(char *, char *);
 void _puts(char *str);
-void finds_cmd(info_t *);
+char *_strdup(const char *);
 
 /* the mercury.c */
-void chain_check(info_t *info, char *puf, size_t *a, size_t y, size_t ren);
-int chain_is(info_t *info, char *puf, size_t *a);
-int replace_vars(char **old, char *new);
+void checks_chain(info_t *info, char *puf, size_t *a, size_t y, size_t ren);
+int its_chain(info_t *info, char *puf, size_t *a);
 int vars_replace(info_t *info);
 int alias_replace(info_t *info);
+int string_replace(char **, char *);
 
 /* the histo.c */
 char *get_histo_file(info_t *info);
@@ -236,8 +194,8 @@ int read_histo(info_t *info);
 int build_histo_list(info_t *info, char *puf, int linespell);
 int renumber_histo(info_t *info);
 
-/* the main.c */
-int shh(info_t *, char **);
-int pops_env_list(info_t *);
+/* the tokens.c */
+char **strwot(char *, char *);
+char **strwot2(char *, char);
 
 #endif

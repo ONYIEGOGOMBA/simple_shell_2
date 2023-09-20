@@ -46,7 +46,7 @@ char **lists_to_string(list_t *h)
 			free(strs);
 			return (NULL);
 		}
-		str = _strcpy(str, done->srt, 0);
+		str = _strcpy(str, done->srt);
 		strs[y] = str;
 	}
 	strs[y] = NULL;

@@ -6,7 +6,7 @@
  */
 int my_env(info_t *info)
 {
-	print_list_srt(info->env);
+	print_lists_str(info->env);
 	return (0);
 }
 /**
@@ -41,7 +41,7 @@ int my_set_env(info_t *info)
 		_pputs("incorrect no of arguments\n");
 		return (1);
 	}
-	if (_setenv(info, info->argv[1], info->argv[2]))
+	if (set_env(info, info->argv[1], info->argv[2]))
 		return (0);
 	return (1);
 }
@@ -60,7 +60,7 @@ int my_unset_env(info_t *info)
 		return (1);
 	}
 	for (y = 1; y <= info->argc; y++)
-		_unsetenv(info, info->argv[y]);
+		unset_env(info, info->argv[y]);
 	return (0);
 }
 /**
@@ -74,7 +74,7 @@ int popularenv_list(info_t *info)
 	size_t y;
 
 	for (y = 0; environ[y]; y++)
-		end_add_node(&done, environ[y], 0);
+		add_done_end(&done, environ[y], 0);
 	info->env = done;
 	return (0);
 }

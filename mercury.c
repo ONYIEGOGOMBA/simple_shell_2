@@ -16,18 +16,18 @@ int chain_is(info_t *info, char *puf, size_t *a)
 	{
 		puf[k] = 0;
 		k++;
-		info->cmd_puf_type = CMD_OR;
+		info->cmd_puf_type = CMD_ORR;
 	}
-	else if (puf[j] == '&' && puf[j + 1] == '&')
+	else if (puf[k] == '&' && puf[k + 1] == '&')
 	{
-		puf[j] = 0;
+		puf[k] = 0;
 		k++;
-		info->cmd_puf_type = CMD_AND;
+		info->cmd_puf_type = CMD_ANDD;
 	}
-	else if (puf[j] == ';') /* found end of this command */
+	else if (puf[k] == ';')
 	{
-		puf[j] = 0; /* replace semicolon with null */
-		info->cmd_puf_type = CMD_CHAIN;
+		puf[k] = 0;
+		info->cmd_puf_type = CMD_CHAINS;
 	}
 	else
 		return (0);
@@ -49,7 +49,7 @@ void chain_check(info_t *info, char *puf, size_t *a, size_t y, size_t ren)
 {
 	size_t k = *a;
 
-	if (info->cmd_buf_type == CMD_AND)
+	if (info->cmd_puf_type == CMD_ANDD)
 	{
 		if (info->status)
 		{
@@ -57,7 +57,7 @@ void chain_check(info_t *info, char *puf, size_t *a, size_t y, size_t ren)
 			k = ren;
 		}
 	}
-	if (info->cmd_buf_type == CMD_OR)
+	if (info->cmd_puf_type == CMD_ORR)
 	{
 		if (!info->status)
 		{
@@ -82,11 +82,11 @@ int alias_replace(info_t *info)
 
 	for (y = 0; y < 10; y++)
 	{
-		done = done_start_with(info->alias, info->argv[0], '=');
+		done = node_start(info->alias, info->argv[0], '=');
 		if (!done)
 			return (0);
 		free(info->argv[0]);
-		a = _strchr(node->str, '=');
+		a = _strhr(done->srt, '=');
 		if (!a)
 			return (0);
 		a = strdup(a + 1);
@@ -115,24 +115,24 @@ int vars_replace(info_t *info)
 			continue;
 		if (!_strcmp(info->argv[y], "$?"))
 		{
-			vars_replace(&(info->argv[y]),
-					strdup(convert_number(info->status, 10, 0)));
+			string_replace(&(info->argv[y]),
+					strdup(number_converter(info->status, 10, 0)));
 			continue;
 		}
 		if (!_strcmp(info->argv[y], "$$"))
 		{
-			vars_replace(&(info->argv[y]),
-					strdup(int convert_number(getpid(), 10, 0)));
+			string_replace(&(info->argv[y]),
+					strdup(number_converter(getpid(), 10, 0)));
 			continue;
 		}
-		done = done_start_with(info->env, &info->argv[y][1], '=');
+		done = node_start(info->env, &info->argv[y][1], '=');
 		if (done)
 		{
-			replace_var(&(info->argv[y]),
-					strdup(_strchr(done->srt, '=') + 1));
+			string_replace(&(info->argv[y]),
+					strdup(_strhr(done->srt, '=') + 1));
 			continue;
 		}
-		replace_var(&info->argv[y], strdup(""));
+		string_replace(&info->argv[y], strdup(""));
 	}
 	return (0);
 }

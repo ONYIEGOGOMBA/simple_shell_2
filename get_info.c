@@ -15,7 +15,7 @@ void info_clear(info_t *info)
  * @info: the struct address
  * @va: the argument vector
  */
-void info_set(info_t *info, char **va)
+void sets_info(info_t *info, char **va)
 {
 	int y = 0;
 
@@ -28,7 +28,7 @@ void info_set(info_t *info, char **va)
 			info->argv = malloc(sizeof(char *) * 2);
 			if (info->argv)
 			{
-				info->argv[0] = _strpud(info->arg);
+				info->argv[0] = _strdup(info->arg);
 				info->argv[1] = NULL;
 			}
 		}
@@ -36,8 +36,8 @@ void info_set(info_t *info, char **va)
 			;
 		info->argc = y;
 
-		replace_alia(info);
-		replace_var(info);
+		alias_replace(info);
+		vars_replace(info);
 	}
 }
 /**
@@ -45,7 +45,7 @@ void info_set(info_t *info, char **va)
  * @info: the struct address
  * @both: is true if all fields are freed
  */
-void info_free(info_t *info, int both)
+void frees_info(info_t *info, int both)
 {
 	pfree(info->argv);
 	info->argv = NULL;
@@ -55,11 +55,11 @@ void info_free(info_t *info, int both)
 		if (!info->cmd_puf)
 			free(info->arg);
 		if (info->envi)
-			free_lists(&(info->envi));
+			frees_lists(&(info->envi));
 		if (info->histo)
-			free_lists(&(info->histo));
+			frees_lists(&(info->histo));
 		if (info->alias)
-			free_lists(&(info->alias));
+			frees_lists(&(info->alias));
 		pfree(info->envir);
 		info->envir = NULL;
 		cfree((void **)info->cmd_puf);

@@ -14,31 +14,31 @@ int shh(info_t *info, char **av)
 
 	while (l != -1 && builtin_ret != -2)
 	{
-		clearenv(info);
+		clears_info(info);
 		if (interact(info))
 			_puts("$ ");
-		_putchar(BUF_FLUSH);
-		l = gets_put(info);
+		_pputchar(BUF_FLUSH);
+		l = gets_input(info);
 		if (l != -1)
 		{
-			set_info(info, av);
-			builtin_ret = find_builtin(info);
+			sets_info(info, av);
+			builtin_ret = finds_builtin(info);
 			if (builtin_ret == -1)
 				finds_cmd(info);
 		}
 		else if (interact(info))
 			_putchar('\n');
-		free_info(info, 0);
+		frees_info(info, 0);
 	}
 	write_histo(info);
-	free_info(info, 1);
+	frees_info(info, 1);
 	if (!interact(info) && info->status)
 		exit(info->status);
 	if (builtin_ret == -2)
 	{
-		if (info->err_num == -1)
+		if (info->err_numb == -1)
 			exit(info->status);
-		exit(info->err_num);
+		exit(info->err_numb);
 	}
 	return (builtin_ret);
 }
@@ -52,18 +52,18 @@ int shh(info_t *info, char **av)
  *			1 if builtin found but not successful,
  *			-2 if builtin signals exit()
  */
-int builtin_find(info_t *info)
+int finds_builtin(info_t *info)
 {
 	int y, built_in_ret = -1;
 	builtin_table builtintbl[] = {
 		{"exit", my_exit},
-		{"env", _myenv},
-		{"help", _myhelp},
-		{"history", my_histo},
-		{"setenv", _setenv},
-		{"unsetenv", _unsetenv},
-		{"cd", _mycd},
-		{"my_alias", my_alias},
+		{"envi", my_env},
+		{"help", my_help},
+		{"histo", my_histo},
+		{"set_env", set_env},
+		{"unset_env", unset_env},
+		{"cd", my_cd},
+		{"alias", my_alias},
 		{NULL, NULL}
 	};
 	for (y = 0; builtintbl[y].typo; y++)
@@ -82,7 +82,7 @@ int builtin_find(info_t *info)
  *
  * Return: void
  */
-void cmd_find(info_t *info)
+void finds_cmd(info_t *info)
 {
 	char *path = NULL;
 	int y, q;
@@ -98,7 +98,7 @@ void cmd_find(info_t *info)
 			q++;
 	if (!q)
 		return;
-	path = finds_path(info, _getenv(info, "PATH="), info->argv[0]);
+	path = finds_path(info, get_env(info, "PATH="), info->argv[0]);
 	if (path)
 	{
 		info->paths = path;
@@ -106,13 +106,13 @@ void cmd_find(info_t *info)
 	}
 	else
 	{
-		if ((interact(info) || _getenv(info, "PATH=")
+		if ((interact(info) || get_env(info, "PATH=")
 					|| info->argv[0][0] == '/') && finds_cmd(info, info->argv[0]))
 			forks_cmd(info);
 		else if (*(info->arg) != '\n')
 		{
 			info->status = 127;
-			print_error(info, "not found\n");
+			prints_error(info, "not found\n");
 		}
 	}
 }
@@ -123,7 +123,7 @@ void cmd_find(info_t *info)
  *
  * Return: void
  */
-void cmd_fork(info_t *info)
+void forks_cmd(info_t *info)
 {
 	pid_t child_pid
 		child_pid = fork();
@@ -136,7 +136,7 @@ void cmd_fork(info_t *info)
 	{
 		if (execve(info->paths, info->argv, get_envir(info)) == -1)
 		{
-			free_info(info, 1);
+			frees_info(info, 1);
 			if (errno == EACCES)
 				exit(126);
 			exit(1);
@@ -149,7 +149,7 @@ void cmd_fork(info_t *info)
 		{
 			info->status = WEXITSTATUS(info->status);
 			if (info->status == 126)
-				print_error(info, "Permission denied\n");
+				prints_error(info, "Permission denied\n");
 		}
 	}
 }

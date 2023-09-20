@@ -6,7 +6,7 @@
  */
 int my_histo(info_t *info)
 {
-	print_list(info->histo);
+	prints_list(info->histo);
 	return (0);
 }
 /**
@@ -20,7 +20,7 @@ int alias_unset(info_t *info, char *srt)
 	char *a, m;
 	int mas;
 
-	a = _strchr(srt, '=');
+	a = _strhr(srt, '=');
 	if (!a)
 		return (1);
 	m = *a;
@@ -40,26 +40,26 @@ int alias_set(info_t *info, char *srt)
 {
 	char *a;
 
-	a = _strchr(srt, '=');
+	a = _strhr(srt, '=');
 	if (!a)
 		return (1);
 	if (!*++a)
 		return (alias_unset(info, srt));
 	alias_unset(info, srt);
-	return (add_node(&(info->alias), srt, 0) == NULL);
+	return (add_done(&(info->alias), srt, 0) == NULL);
 }
 /**
  * alias_print - prints an alias
  * @done: the alias done
  * Return: always 0 on succes and 1 on error
  */
-int alias_print(list_t *done)
+int prints_alias(list_t *done)
 {
 	char *a = NULL, *n = NULL;
 
 	if (done)
 	{
-		a = _strchr(done->srt, '=');
+		a = _strhr(done->srt, '=');
 		for (n = done->srt; n <= a; n++)
 			_putchar(*a);
 		_putchar('\'');
@@ -85,18 +85,18 @@ int my_alias(info_t *info)
 		done = info->alias;
 		while (done)
 		{
-			alias_print(done);
+			prints_alias(done);
 			done = done->next;
 		}
 		return (0);
 	}
 	for (y = 1; info->argv[y]; y++)
 	{
-		a = _strchr(info->argv[y], '=');
+		a = _strhr(info->argv[y], '=');
 		if (a)
 			alias_set(info, info->argv[y]);
 		else
-			alias_print(node_start(info->alias, info->argv[y], '='));
+		prints_alias(node_start(info->alias, info->argv[y], '='));
 	}
 	return (0);
 }

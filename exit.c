@@ -6,7 +6,7 @@
  * @f: amount of characters
  * Return: concatenanted string
  */
-char *_strcpy(char *dess, char *scr, int f)
+char *_strmcpy(char *dess, char *scr, int f)
 {
 	int y, k;
 	char *b = dess;
@@ -35,7 +35,7 @@ char *_strcpy(char *dess, char *scr, int f)
  * @f: amount of bytes
  * Return: concatenated string
  */
-char *_strcat(char *dess, char *scr, int f)
+char *_strmcat(char *dess, char *scr, int f)
 {
 	int y, k;
 	char *b = dess;

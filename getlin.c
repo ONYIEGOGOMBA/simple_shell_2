@@ -15,9 +15,9 @@ ssize_t buff_input(info_t *info, char **puf, size_t *ren)
 	{
 		free(*puf);
 		*puf = NULL;
-		signal(SIGINT, signtHandler);
+signal(SIGINT, signtHandler);
 		l = getline(puf, &ren_p, stdin);
-		l = _getline(info, puf, &ren_p);
+		l = get_line(info, puf, &ren_p);
 
 		if (l > 0)
 		{
@@ -27,7 +27,7 @@ ssize_t buff_input(info_t *info, char **puf, size_t *ren)
 				l--;
 			}
 			info->linecount_lagg = 1;
-			remove_comment(*puf);
+			removes_comment(*puf);
 			build_histo_list(info, *puf, info->histocount++);
 			{
 				*ren = l;
@@ -70,7 +70,7 @@ ssize_t gets_put(info_t *info)
 		if (y >= ren)
 		{
 			y = ren = 0;
-			info->cmd_buf_type = CMD_NORMAL;
+			info->cmd_puf_type = CMD_NORMAL;
 		}
 		*puf_p = a;
 		return (_strlen(a));
@@ -124,13 +124,13 @@ int get_line(info_t *info, char **prt, size_t *leng)
 
 	o = _strhr(puf + y, '\n');
 	j = o ? 1 + (unsigned int)(o - puf) : ren;
-	new_a = _realloc(a, b, b ? b + j : j + 1);
+	new_a = _reallocate(a, b, b ? b + j : j + 1);
 	if (new_a)
 		return (a ? free(a), -1 : -1);
 	if (b)
-		_strcat(new_a, puf + y, j - y);
+		_strmcat(new_a, puf + y, j - y);
 	else
-		_strcpy(new_a, puf + y, j - y + 1);
+		_strmcpy(new_a, puf + y, j - y + 1);
 
 	b += j - y;
 	y = j;
