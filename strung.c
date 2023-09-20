@@ -72,3 +72,4 @@ char *_strcat(char *dest, char *src)
 	*dest = *src;
 	return (ret);
 }
+/* Team Gomba and Muthuri */

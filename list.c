@@ -156,3 +156,4 @@ void list_free(list_t **head_ptr)
 	}
 	*head_ptr = NULL;
 }
+/* Team Gomba and Muthuri */
