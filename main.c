@@ -55,7 +55,7 @@ int executes(char **argb, char **infront)
 				rett = (creates_error(argb, 126));
 			frees_env();
 			frees_argb(argb, infront);
-			frees_alias_list(aliases);
+			frees_alias_list(aliass);
 			_exit(rett);
 		}
 		else
@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
 
 	name = argv[0];
 	hist = 1;
-	aliases = NULL;
+	aliass = NULL;
 	signal(SIGINT, sign_handler);
 
 	*exec_ret = 0;
@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
 	{
 		rett = proc_files_commands(argv[1], exec_ret);
 		frees_env();
-		frees_alias_list(aliases);
+		frees_alias_list(aliass);
 		return (*exec_ret);
 	}
 
@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
 		while (rett != END_OF_FILE && rett != EXIT)
 			rett = handles_argb(exec_ret);
 		frees_env();
-		frees_alias_list(aliases);
+		frees_alias_list(aliass);
 		return (*exec_ret);
 	}
 
@@ -117,12 +117,12 @@ int main(int argc, char *argv[])
 			if (rett == END_OF_FILE)
 				write(STDOUT_FILENO, newline, 1);
 			frees_env();
-			frees_alias_list(aliases);
+			frees_alias_list(aliass);
 			exit(*exec_ret);
 		}
 	}
 
 	frees_env();
-	frees_alias_list(aliases);
+	frees_alias_list(aliass);
 	return (*exec_ret);
 }
