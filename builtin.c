@@ -80,7 +80,7 @@ int exit_shell(char **argb, char **infront)
  */
 int cd_shell(char **argb, char __attribute__((__unused__)) **infront)
 {
-	char **info_info, *newline = "\n";
+	char **info_dir, *newline = "\n";
 	char *old_pwd = NULL, *pwd = NULL;
 	struct stat dir;
 
