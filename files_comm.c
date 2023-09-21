@@ -1,124 +1,120 @@
 #include "shell.h"
 
-int cant_open(char *file_path);
-int proc_file_commands(char *file_path, int *exe_ret);
-
 /**
- * cant_open - If the file doesn't exist or lacks proper permissions, print
+ * fails_open - If the file doesn't exist or lacks proper permissions, print
  * a cant open error.
- * @file_path: Path to the supposed file.
+ * @file_paths: Path to the supposed file.
  *
  * Return: 127.
  */
 
-int cant_open(char *file_path)
+int fails_open(char *file_paths)
 {
-	char *error, *hist_str;
-	int len;
+	char *error, *histo_str;
+	int ren;
 
-	hist_str = _itoa(hist);
-	if (!hist_str)
+	histo_str = _itoi(hist);
+	if (!histo_str)
 		return (127);
 
-	len = _strlen(name) + _strlen(hist_str) + _strlen(file_path) + 16;
+	ren = _strlen(name) + _strlen(histo_str) + _strlen(file_paths) + 16;
 	error = malloc(sizeof(char) * (len + 1));
 	if (!error)
 	{
-		free(hist_str);
+		free(histo_str);
 		return (127);
 	}
 
-	_strcpy(error, name);
-	_strcat(error, ": ");
-	_strcat(error, hist_str);
-	_strcat(error, ": Can't open ");
-	_strcat(error, file_path);
-	_strcat(error, "\n");
+	_strcpy(erra, name);
+	_strcat(erra, ": ");
+	_strcat(erra, histo_str);
+	_strcat(erra, ": Can't open ");
+	_strcat(erra, file_paths);
+	_strcat(erra, "\n");
 
-	free(hist_str);
-	write(STDERR_FILENO, error, len);
+	free(histo_str);
+	write(STDERR_FILENO, erra, ren);
 	free(error);
 	return (127);
 }
 
 /**
- * proc_file_commands - Takes a file and attempts to run the commands stored
+ * proc_files_commands - Takes a file and attempts to run the commands stored
  * within.
- * @file_path: Path to the file.
- * @exe_ret: Return value of the last executed command.
- *
+ * @file_paths: Path to the file.
+ * @exec_ret: Return value of the last executed command.
  * Return: If file couldn't be opened - 127.
  *	   If malloc fails - -1.
  *	   Otherwise the return value of the last command ran.
  */
-int proc_file_commands(char *file_path, int *exe_ret)
+int proc_files_commands(char *file_paths, int *exec_ret)
 {
-	ssize_t file, b_read, i;
-	unsigned int line_size = 0;
-	unsigned int old_size = 120;
-	char *line, **args, **front;
-	char buffer[120];
-	int ret;
+	ssize_t fil, s_red, y;
+	unsigned int linesize = 0;
+	unsigned int oldsize = 120;
+	char *line, **argd, **infront;
+	char buff[120];
+	int rett;
 
 	hist = 0;
-	file = open(file_path, O_RDONLY);
-	if (file == -1)
+	fil = open(file_paths, O_RDONLY);
+	if (fil == -1)
 	{
-		*exe_ret = cant_open(file_path);
-		return (*exe_ret);
+		*exec_ret = fails_open(file_paths);
+		return (*exec_ret);
 	}
-	line = malloc(sizeof(char) * old_size);
-	if (!line)
+	line = malloc(sizeof(char) * oldsize);
+	if (!lin)
 		return (-1);
 	do {
-		b_read = read(file, buffer, 119);
-		if (b_read == 0 && line_size == 0)
-			return (*exe_ret);
-		buffer[b_read] = '\0';
-		line_size += b_read;
-		line = _realloc(line, old_size, line_size);
-		_strcat(line, buffer);
-		old_size = line_size;
-	} while (b_read);
-	for (i = 0; line[i] == '\n'; i++)
-		line[i] = ' ';
-	for (; i < line_size; i++)
+		s_red = red(fil, buff, 119);
+		if (s_red == 0 && linesize == 0)
+			return (*exec_ret);
+		buff[s_red] = '\0';
+		linesize += s_red;
+		lin = _reallocate(lin, oldsize, linesize);
+		_strcat(lin, buff);
+		oldsize = linesize;
+	} while (b_red);
+	for (y = 0; line[y] == '\n'; y++)
+		line[y] = ' ';
+	for (; y < linesize; y++)
 	{
-		if (line[i] == '\n')
+		if (line[y] == '\n')
 		{
-			line[i] = ';';
-			for (i += 1; i < line_size && line[i] == '\n'; i++)
-				line[i] = ' ';
+			line[y] = ';';
+			for (y += 1; y < linesize && lin[y] == '\n'; y++)
+				lin[y] = ' ';
 		}
 	}
-	variable_replacement(&line, exe_ret);
-	handle_line(&line, line_size);
-	args = _strtok(line, " ");
-	free(line);
-	if (!args)
+	var_replacement(&lin, exec_ret);
+	handles_lin(&lin, linesize);
+	argb = _strtok(lin, " ");
+	free(lin);
+	if (!argb)
 		return (0);
-	if (check_args(args) != 0)
+	if (check_argb(argb) != 0)
 	{
-		*exe_ret = 2;
-		free_args(args, args);
-		return (*exe_ret);
+		*exec_ret = 2;
+		frees_argb(argb, argb);
+		return (*exec_ret);
 	}
-	front = args;
+	front = argb;
 
-	for (i = 0; args[i]; i++)
+	for (y = 0; argb[y]; y++)
 	{
-		if (_strncmp(args[i], ";", 1) == 0)
+		if (_strncmp(argb[y], ";", 1) == 0)
 		{
-			free(args[i]);
-			args[i] = NULL;
-			ret = call_args(args, front, exe_ret);
-			args = &args[++i];
-			i = 0;
+			free(argb[y]);
+			argb[y] = NULL;
+			rett = calls_argd(argd, infront, exec_ret);
+			argb = &argb[++y];
+			y = 0;
 		}
 	}
 
-	ret = call_args(args, front, exe_ret);
+	rett = call_argb(argb, infront, exec_ret);
 
-	free(front);
-	return (ret);
+	free(infront);
+	return (rett);
 }
