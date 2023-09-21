@@ -22,7 +22,7 @@ int shell_alias(char **argb, char __attribute__((__unused__)) **infront)
 		}
 		return (rett);
 	}
-	for (b = 0; argb[y]; y++)
+	for (s = 0; argb[y]; y++)
 	{
 		tem = aliass;
 		value = _strchr(argb[y], '=');
@@ -125,7 +125,7 @@ char **replaces_aliases(char **argb)
 		{
 			if (_strcmp(argb[y], tem->name) == 0)
 			{
-				newvalue = malloc(sizeof(char) * (_strlen(temp->value) + 1));
+				newvalue = malloc(sizeof(char) * (_strlen(tem->value) + 1));
 				if (!newvalue)
 				{
 					frees_argb(argb, argb);
@@ -134,7 +134,7 @@ char **replaces_aliases(char **argb)
 				_strcpy(newvalue, temp->value);
 				free(argb[y]);
 				argb[y] = newvalue;
-				i--;
+				y--;
 				break;
 			}
 			tem = tem->next;
