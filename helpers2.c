@@ -1,186 +1,176 @@
 #include "shell.h"
 
-void handle_line(char **line, ssize_t read);
-ssize_t get_new_len(char *line);
-void logical_ops(char *line, ssize_t *new_len);
-
 /**
- * handle_line - Partitions a line read from standard input as needed.
- * @line: A pointer to a line read from standard input.
- * @read: The length of line.
- *
- * Description: Spaces are inserted to separate ";", "||", and "&&".
- *              Replaces "#" with '\0'.
+ * handles_lin - Partitions a line read from standard input as needed.
+ * @lin: A pointer to a line read from standard input.
+ * @red: The length of line.
  */
-void handle_line(char **line, ssize_t read)
+void handles_lin(char **line, ssize_t read)
 {
-	char *old_line, *new_line;
-	char previous, current, next;
-	size_t i, j;
-	ssize_t new_len;
+	char *old_lin, *newline;
+	char past, present, next;
+	size_t y, k;
+	ssize_t new_ren;
 
-	new_len = get_new_len(*line);
-	if (new_len == read - 1)
+	new_ren = get_new_ren(*lin);
+	if (new_ren == red - 1)
 		return;
-	new_line = malloc(new_len + 1);
-	if (!new_line)
+	newline = malloc(new_ren + 1);
+	if (!newline)
 		return;
-	j = 0;
-	old_line = *line;
-	for (i = 0; old_line[i]; i++)
+	k = 0;
+	old_lin = *lin;
+	for (y = 0; old_lin[y]; y++)
 	{
-		current = old_line[i];
-		next = old_line[i + 1];
-		if (i != 0)
+		present = old_lin[y];
+		next = old_lin[y + 1];
+		if (y != 0)
 		{
-			previous = old_line[i - 1];
-			if (current == ';')
+			past = old_lin[y - 1];
+			if (present == ';')
 			{
-				if (next == ';' && previous != ' ' && previous != ';')
+				if (next == ';' && past != ' ' && past != ';')
 				{
-					new_line[j++] = ' ';
-					new_line[j++] = ';';
+					newline[k++] = ' ';
+					newline[k++] = ';';
 					continue;
 				}
-				else if (previous == ';' && next != ' ')
+				else if (past == ';' && next != ' ')
 				{
-					new_line[j++] = ';';
-					new_line[j++] = ' ';
+					newline[k++] = ';';
+					newline[k++] = ' ';
 					continue;
 				}
-				if (previous != ' ')
-					new_line[j++] = ' ';
-				new_line[j++] = ';';
+				if (ast != ' ')
+					newline[k++] = ' ';
+				newline[k++] = ';';
 				if (next != ' ')
-					new_line[j++] = ' ';
+					newline[k++] = ' ';
 				continue;
 			}
-			else if (current == '&')
+			else if (present == '&')
 			{
-				if (next == '&' && previous != ' ')
-					new_line[j++] = ' ';
-				else if (previous == '&' && next != ' ')
+				if (next == '&' && past != ' ')
+					newline[k++] = ' ';
+				else if (past == '&' && next != ' ')
 				{
-					new_line[j++] = '&';
-					new_line[j++] = ' ';
+					newline[k++] = '&';
+					newline[k++] = ' ';
 					continue;
 				}
 			}
-			else if (current == '|')
+			else if (present == '|')
 			{
-				if (next == '|' && previous != ' ')
-					new_line[j++]  = ' ';
-				else if (previous == '|' && next != ' ')
+				if (next == '|' && past != ' ')
+					newline[k++]  = ' ';
+				else if (past == '|' && next != ' ')
 				{
-					new_line[j++] = '|';
-					new_line[j++] = ' ';
+					newline[k++] = '|';
+					newline[k++] = ' ';
 					continue;
 				}
 			}
 		}
-		else if (current == ';')
+		else if (present == ';')
 		{
-			if (i != 0 && old_line[i - 1] != ' ')
-				new_line[j++] = ' ';
-			new_line[j++] = ';';
+			if (y != 0 && old_lin[y - 1] != ' ')
+				newline[k++] = ' ';
+			newline[k++] = ';';
 			if (next != ' ' && next != ';')
-				new_line[j++] = ' ';
+				newline[k++] = ' ';
 			continue;
 		}
-		new_line[j++] = old_line[i];
+		newline[k++] = old_lin[y];
 	}
-	new_line[j] = '\0';
+	newline[k] = '\0';
 
-	free(*line);
-	*line = new_line;
+	free(*lin);
+	*lin = newline;
 }
 
 /**
- * get_new_len - Gets the new length of a line partitioned
+ * get_new_ren - Gets the new length of a line partitioned
  *               by ";", "||", "&&&", or "#".
- * @line: The line to check.
- *
+ * @lin: The line to check.
  * Return: The new length of the line.
- *
- * Description: Cuts short lines containing '#' comments with '\0'.
  */
 
-ssize_t get_new_len(char *line)
+ssize_t get_new_ren(char *lin)
 {
-	size_t i;
-	ssize_t new_len = 0;
-	char current, next;
+	size_t y;
+	ssize_t new_ren = 0;
+	char present, next;
 
-	for (i = 0; line[i]; i++)
+	for (y = 0; lin[y]; y++)
 	{
-		current = line[i];
-		next = line[i + 1];
-		if (current == '#')
+		present = lin[y];
+		next = lin[y + 1];
+		if (present == '#')
 		{
-			if (i == 0 || line[i - 1] == ' ')
+			if (y == 0 || lin[y - 1] == ' ')
 			{
-				line[i] = '\0';
+				lin[y] = '\0';
 				break;
 			}
 		}
-		else if (i != 0)
+		else if (y != 0)
 		{
-			if (current == ';')
+			if (present == ';')
 			{
-				if (next == ';' && line[i - 1] != ' ' && line[i - 1] != ';')
+				if (next == ';' && lin[y - 1] != ' ' && lin[y - 1] != ';')
 				{
-					new_len += 2;
+					new_ren += 2;
 					continue;
 				}
-				else if (line[i - 1] == ';' && next != ' ')
+				else if (lin[y - 1] == ';' && next != ' ')
 				{
-					new_len += 2;
+					new_ren += 2;
 					continue;
 				}
-				if (line[i - 1] != ' ')
-					new_len++;
+				if (lin[y - 1] != ' ')
+					new_ren++;
 				if (next != ' ')
-					new_len++;
+					new_ren++;
 			}
 			else
-				logical_ops(&line[i], &new_len);
+				ops_logical(&lin[y], &new_ren);
 		}
-		else if (current == ';')
+		else if (present == ';')
 		{
-			if (i != 0 && line[i - 1] != ' ')
-				new_len++;
+			if (y != 0 && lin[y - 1] != ' ')
+				new_ren++;
 			if (next != ' ' && next != ';')
-				new_len++;
+				new_ren++;
 		}
-		new_len++;
+		new_ren++;
 	}
-	return (new_len);
+	return (new_ren);
 }
 /**
- * logical_ops - Checks a line for logical operators "||" or "&&".
- * @line: A pointer to the character to check in the line.
- * @new_len: Pointer to new_len in get_new_len function.
+ * ops_logical - Checks a line for logical operators "||" or "&&".
+ * @lin: A pointer to the character to check in the line.
+ * @new_ren: Pointer to new_len in get_new_len function.
  */
-void logical_ops(char *line, ssize_t *new_len)
+void ops_logical(char *lin, ssize_t *new_ren)
 {
-	char previous, current, next;
+	char past, present, next;
 
-	previous = *(line - 1);
-	current = *line;
-	next = *(line + 1);
+	past = *(lin - 1);
+	present = *lin;
+	next = *(lin + 1);
 
-	if (current == '&')
+	if (present == '&')
 	{
-		if (next == '&' && previous != ' ')
-			(*new_len)++;
-		else if (previous == '&' && next != ' ')
-			(*new_len)++;
+		if (next == '&' && past != ' ')
+			(*new_ren)++;
+		else if (past == '&' && next != ' ')
+			(*new_ren)++;
 	}
-	else if (current == '|')
+	else if (present == '|')
 	{
-		if (next == '|' && previous != ' ')
-			(*new_len)++;
-		else if (previous == '|' && next != ' ')
-			(*new_len)++;
+		if (next == '|' && past != ' ')
+			(*new_ren)++;
+		else if (past == '|' && next != ' ')
+			(*new_ren)++;
 	}
 }

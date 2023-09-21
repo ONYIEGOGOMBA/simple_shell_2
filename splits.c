@@ -1,104 +1,98 @@
 #include "shell.h"
 
-int token_len(char *str, char *delim);
-int count_tokens(char *str, char *delim);
-char **_strtok(char *line, char *delim);
-
 /**
- * token_len - Locates the delimiter index marking the end
+ * token_ren - Locates the delimiter index marking the end
  *             of the first token contained within a string.
  * @str: The string to be searched.
- * @delim: The delimiter character.
+ * @dell: The delimiter character.
  *
  * Return: The delimiter index marking the end of
  *         the intitial token pointed to be str.
  */
-int token_len(char *str, char *delim)
+int token_ren(char *str, char *dell)
 {
-	int index = 0, len = 0;
+	int index = 0, ren = 0;
 
-	while (*(str + index) && *(str + index) != *delim)
+	while (*(str + index) && *(str + index) != *dell)
 	{
-		len++;
+		ren++;
 		index++;
 	}
 
-	return (len);
+	return (ren);
 }
 
 /**
- * count_tokens - Counts the number of delimited
+ * counts_token - Counts the number of delimited
  *                words contained within a string.
  * @str: The string to be searched.
- * @delim: The delimiter character.
- *
+ * @dell: The delimiter character.
  * Return: The number of words contained within str.
  */
-int count_tokens(char *str, char *delim)
+int counts_token(char *str, char *dell)
 {
-	int index, tokens = 0, len = 0;
+	int index, toks = 0, ren = 0;
 
 	for (index = 0; *(str + index); index++)
-		len++;
+		ren++;
 
-	for (index = 0; index < len; index++)
+	for (index = 0; index < ren; index++)
 	{
 		if (*(str + index) != *delim)
 		{
-			tokens++;
-			index += token_len(str + index, delim);
+			toks++;
+			index += token_ren(str + index, dell);
 		}
 	}
 
-	return (tokens);
+	return (toks);
 }
 
 /**
  * _strtok - Tokenizes a string.
- * @line: The string.
- * @delim: The delimiter character to tokenize the string by.
- *
+ * @lin: The string.
+ * @dell: The delimiter character to tokenize the string by.
  * Return: A pointer to an array containing the tokenized words.
  */
-char **_strtok(char *line, char *delim)
+char **_strtok(char *lin, char *dell)
 {
-	char **ptr;
-	int index = 0, tokens, t, letters, l;
+	char **rpt;
+	int index = 0, toks, o, letas, a;
 
-	tokens = count_tokens(line, delim);
-	if (tokens == 0)
+	toks = counts_token(lin, dell);
+	if (toks == 0)
 		return (NULL);
 
-	ptr = malloc(sizeof(char *) * (tokens + 2));
-	if (!ptr)
+	rpt = malloc(sizeof(char *) * (toks + 2));
+	if (!rpt)
 		return (NULL);
 
-	for (t = 0; t < tokens; t++)
+	for (o = 0; t < toks; o++)
 	{
-		while (line[index] == *delim)
+		while (lin[index] == *dell)
 			index++;
 
-		letters = token_len(line + index, delim);
+		letas = token_ren(lin + index, dell);
 
-		ptr[t] = malloc(sizeof(char) * (letters + 1));
-		if (!ptr[t])
+		rpt[o] = malloc(sizeof(char) * (letas + 1));
+		if (!rpt[o])
 		{
 			for (index -= 1; index >= 0; index--)
-				free(ptr[index]);
-			free(ptr);
+				free(rpt[index]);
+			free(rpt);
 			return (NULL);
 		}
 
-		for (l = 0; l < letters; l++)
+		for (a = 0; a < letas; a++)
 		{
-			ptr[t][l] = line[index];
+			rpt[o][a] = lin[index];
 			index++;
 		}
 
-		ptr[t][l] = '\0';
+		ptr[o][a] = '\0';
 	}
-	ptr[t] = NULL;
-	ptr[t + 1] = NULL;
+	rpt[o] = NULL;
+	rpt[o + 1] = NULL;
 
-	return (ptr);
+	return (rpt);
 }
