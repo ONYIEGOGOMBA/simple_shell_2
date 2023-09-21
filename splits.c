@@ -67,7 +67,7 @@ char **_strtok(char *lin, char *dell)
 	if (!rpt)
 		return (NULL);
 
-	for (o = 0; t < toks; o++)
+	for (o = 0; o < toks; o++)
 	{
 		while (lin[index] == *dell)
 			index++;

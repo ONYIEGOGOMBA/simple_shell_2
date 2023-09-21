@@ -107,7 +107,7 @@ char **_getenv(const char *);
 
 /* Error Handling */
 int creates_error(char **, int);
-char *errorenv(char **);
+char *env_error(char **);
 char *error1(char **);
 char *exiterror_2(char **);
 char *cderror_2(char **);
@@ -131,5 +131,10 @@ void _setenv(void);
 void _unsetenv(void);
 void _history(void);
 
+ssize_t gets_new_ren(char *);
+void ops_logical(char *, ssize_t *);
+void sets_alias(char *, char *);
+void prints_alias(alias_t *);
+int alias_shell(char **, char __attribute__((__unused__)) **);
 int proc_files_commands(char *file_path, int *exe_ret);
 #endif
