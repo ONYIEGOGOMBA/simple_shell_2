@@ -1,47 +1,42 @@
 #include "shell.h"
-
-void sig_handler(int sig);
-int execute(char **args, char **front);
-
 /**
- * sig_handler - Prints a new prompt upon a signal.
- * @sig: The signal.
+ * sigin_handler - Prints a new prompt upon a signal.
+ * @sign: The signal.
  */
-void sig_handler(int sig)
+void sign_handler(int sign)
 {
-	char *new_prompt = "\n$ ";
+	char *new_promp = "\n$ ";
 
-	(void)sig;
-	signal(SIGINT, sig_handler);
-	write(STDIN_FILENO, new_prompt, 3);
+	(void)sign;
+	signal(SIGINT, sign_handler);
+	write(STDIN_FILENO, new_promp, 3);
 }
 
 /**
- * execute - Executes a command in a child process.
- * @args: An array of arguments.
- * @front: A double pointer to the beginning of args.
- *
+ * executes - Executes a command in a child process.
+ * @argb: An array of arguments.
+ * @infront: A double pointer to the beginning of args.
  * Return: If an error occurs - a corresponding error code.
  *         O/w - The exit value of the last executed command.
  */
-int execute(char **args, char **front)
+int executes(char **argb, char **infront)
 {
 	pid_t child_pid;
-	int status, flag = 0, ret = 0;
-	char *command = args[0];
+	int status, flag = 0, rett = 0;
+	char *comnd = argb[0];
 
-	if (command[0] != '/' && command[0] != '.')
+	if (comnd[0] != '/' && comnd[0] != '.')
 	{
 		flag = 1;
-		command = get_location(command);
+		comnd = gets_location(comnd);
 	}
 
-	if (!command || (access(command, F_OK) == -1))
+	if (!comnd || (access(comnd, F_OK) == -1))
 	{
 		if (errno == EACCES)
-			ret = (create_error(args, 126));
+			rett = (creates_error(argb, 126));
 		else
-			ret = (create_error(args, 127));
+			rett = (creates_error(argb, 127));
 	}
 	else
 	{
@@ -49,86 +44,85 @@ int execute(char **args, char **front)
 		if (child_pid == -1)
 		{
 			if (flag)
-				free(command);
+				free(comnd);
 			perror("Error child:");
 			return (1);
 		}
 		if (child_pid == 0)
 		{
-			execve(command, args, environ);
+			execve(comnd, argb, environ);
 			if (errno == EACCES)
-				ret = (create_error(args, 126));
-			free_env();
-			free_args(args, front);
-			free_alias_list(aliases);
-			_exit(ret);
+				rett = (creates_error(argb, 126));
+			frees_env();
+			frees_argb(argb, infront);
+			frees_alias_list(aliass);
+			_exit(rett);
 		}
 		else
 		{
 			wait(&status);
-			ret = WEXITSTATUS(status);
+			rett = WEXITSTATUS(status);
 		}
 	}
 	if (flag)
-		free(command);
-	return (ret);
+		free(comnd);
+	return (rett);
 }
 
 /**
  * main - Runs a simple UNIX command interpreter.
  * @argc: The number of arguments supplied to the program.
  * @argv: An array of pointers to the arguments.
- *
  * Return: The return value of the last executed command.
  */
 int main(int argc, char *argv[])
 {
-	int ret = 0, retn;
-	int *exe_ret = &retn;
-	char *prompt = "$ ", *new_line = "\n";
+	int rett = 0, retn;
+	int *exec_ret = &retn;
+	char *promp = "$ ", *newline = "\n";
 
 	name = argv[0];
 	hist = 1;
-	aliases = NULL;
-	signal(SIGINT, sig_handler);
+	aliass = NULL;
+	signal(SIGINT, sign_handler);
 
-	*exe_ret = 0;
-	environ = _copyenv();
+	*exec_ret = 0;
+	environ = _copiesenv();
 	if (!environ)
 		exit(-100);
 
 	if (argc != 1)
 	{
-		ret = proc_files_commands(argv[1], exe_ret);
-		free_env();
-		free_alias_list(aliases);
-		return (*exe_ret);
+		rett = proc_files_commands(argv[1], exec_ret);
+		frees_env();
+		frees_alias_list(aliases);
+		return (*exec_ret);
 	}
 
 	if (!isatty(STDIN_FILENO))
 	{
-		while (ret != END_OF_FILE && ret != EXIT)
-			ret = handle_args(exe_ret);
-		free_env();
-		free_alias_list(aliases);
-		return (*exe_ret);
+		while (rett != END_OF_FILE && rett != EXIT)
+			rett = handles_argb(exec_ret);
+		frees_env();
+		frees_alias_list(aliases);
+		return (*exec_ret);
 	}
 
 	while (1)
 	{
-		write(STDOUT_FILENO, prompt, 2);
-		ret = handle_args(exe_ret);
-		if (ret == END_OF_FILE || ret == EXIT)
+		write(STDOUT_FILENO, promp, 2);
+		rett = handles_argb(exec_ret);
+		if (rett == END_OF_FILE || rett == EXIT)
 		{
-			if (ret == END_OF_FILE)
-				write(STDOUT_FILENO, new_line, 1);
-			free_env();
-			free_alias_list(aliases);
-			exit(*exe_ret);
+			if (rett == END_OF_FILE)
+				write(STDOUT_FILENO, newline, 1);
+			frees_env();
+			frees_alias_list(aliases);
+			exit(*exec_ret);
 		}
 	}
 
-	free_env();
-	free_alias_list(aliases);
-	return (*exe_ret);
+	frees_env();
+	frees_alias_list(aliases);
+	return (*exec_ret);
 }
