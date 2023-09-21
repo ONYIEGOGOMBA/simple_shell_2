@@ -22,7 +22,7 @@ int shell_alias(char **argb, char __attribute__((__unused__)) **infront)
 		}
 		return (rett);
 	}
-	for (s = 0; argb[y]; y++)
+	for (y = 0; argb[y]; y++)
 	{
 		tem = aliass;
 		value = _strchr(argb[y], '=');
@@ -131,7 +131,7 @@ char **replaces_aliases(char **argb)
 					frees_argb(argb, argb);
 					return (NULL);
 				}
-				_strcpy(newvalue, temp->value);
+				_strcpy(newvalue, tem->value);
 				free(argb[y]);
 				argb[y] = newvalue;
 				y--;
