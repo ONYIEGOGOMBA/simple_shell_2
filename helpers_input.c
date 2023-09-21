@@ -7,19 +7,19 @@
  * Return: If an error occurs - NULL.
  *         Otherwise - a pointer to the stored command.
  */
-char *gets_argb char *line, int *exe_ret)
+char *gets_argb(char *line, int *exe_ret)
 {
 	size_t f = 0;
-	ssize_t red;
+	ssize_t read;
 	char *promp = "$ ";
 
 	if (lin)
 		free(lin);
 
-	red = _getline(&lin, &f, STDIN_FILENO);
+	read = _getline(&lin, &f, STDIN_FILENO);
 	if (read == -1)
 		return (NULL);
-	if (red == 1)
+	if (read == 1)
 	{
 		hist++;
 		if (isatty(STDIN_FILENO))
@@ -29,7 +29,7 @@ char *gets_argb char *line, int *exe_ret)
 
 	lin[read - 1] = '\0';
 	var_replacement(&lin, exec_ret);
-	handles_lin(&lin, re);
+	handles_lin(&lin, read);
 
 	return (lin);
 }
@@ -53,8 +53,8 @@ int calls_argb(char **argb, char **infront, int *exec_ret)
 		{
 			free(argb[index]);
 			argb[index] = NULL;
-			argb = replaces_aliases(args);
-			ret = runs_argb(argb, infront, exec_ret);
+			argb = replaces_aliases(argb);
+			rett = runs_argb(argb, infront, exec_ret);
 			if (*exec_ret != 0)
 			{
 				argb = &argb[++index];

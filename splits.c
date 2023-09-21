@@ -38,7 +38,7 @@ int counts_token(char *str, char *dell)
 
 	for (index = 0; index < ren; index++)
 	{
-		if (*(str + index) != *delim)
+		if (*(str + index) != *dell)
 		{
 			toks++;
 			index += token_ren(str + index, dell);
@@ -89,7 +89,7 @@ char **_strtok(char *lin, char *dell)
 			index++;
 		}
 
-		ptr[o][a] = '\0';
+		rpt[o][a] = '\0';
 	}
 	rpt[o] = NULL;
 	rpt[o + 1] = NULL;

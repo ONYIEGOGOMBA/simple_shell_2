@@ -29,7 +29,7 @@ char **_copiesenv(void)
 			free(new_env);
 			return (NULL);
 		}
-		_strcpy(new_env[index], env[index]);
+		_strcpy(new_env[index], environ[index]);
 	}
 	new_env[index] = NULL;
 

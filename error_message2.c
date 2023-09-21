@@ -5,7 +5,7 @@
  * @argb: An array of arguments passed to the command.
  * Return: The error string.
  */
-char *126_error(char **argd)
+char *error_126(char **argb)
 {
 	char *erra, *histo_str;
 	int ren;
@@ -14,7 +14,7 @@ char *126_error(char **argd)
 	if (!histo_str)
 		return (NULL);
 
-	ren = _strlen(name) + _strlen(histo_str) + _strlen(argd[0]) + 24;
+	ren = _strlen(name) + _strlen(histo_str) + _strlen(argb[0]) + 24;
 	erra = malloc(sizeof(char) * (ren + 1));
 	if (!erra)
 	{
@@ -26,7 +26,7 @@ char *126_error(char **argd)
 	_strcat(erra, ": ");
 	_strcat(erra, histo_str);
 	_strcat(erra, ": ");
-	_strcat(erra, argd[0]);
+	_strcat(erra, argb[0]);
 	_strcat(erra, ": Permission denied\n");
 
 	free(histo_str);
@@ -34,11 +34,11 @@ char *126_error(char **argd)
 }
 
 /**
- * 127_error - Creates an error message for command not found failures.
- * @argd: An array of arguments passed to the command.
+ * error_127 - Creates an error message for command not found failures.
+ * @argb: An array of arguments passed to the command.
  * Return: The error string.
  */
-char *127_error(char **argd)
+char *error_127(char **argb)
 {
 	char *erra, *histo_str;
 	int ren;
@@ -47,7 +47,7 @@ char *127_error(char **argd)
 	if (!histo_str)
 		return (NULL);
 
-	ren = _strlen(name) + _strlen(histo_str) + _strlen(argd[0]) + 16;
+	ren = _strlen(name) + _strlen(histo_str) + _strlen(argb[0]) + 16;
 	erra = malloc(sizeof(char) * (ren + 1));
 	if (!erra)
 	{
@@ -59,7 +59,7 @@ char *127_error(char **argd)
 	_strcat(erra, ": ");
 	_strcat(erra, histo_str);
 	_strcat(erra, ": ");
-	_strcat(erra, argd[0]);
+	_strcat(erra, argb[0]);
 	_strcat(erra, ": not found\n");
 
 	free(histo_str);

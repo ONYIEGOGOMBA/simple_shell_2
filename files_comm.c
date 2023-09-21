@@ -10,7 +10,7 @@
 
 int fails_open(char *file_paths)
 {
-	char *error, *histo_str;
+	char *erra, *histo_str;
 	int ren;
 
 	histo_str = _atoi(hist);
@@ -18,8 +18,8 @@ int fails_open(char *file_paths)
 		return (127);
 
 	ren = _strlen(name) + _strlen(histo_str) + _strlen(file_paths) + 16;
-	error = malloc(sizeof(char) * (ren + 1));
-	if (!error)
+	erra = malloc(sizeof(char) * (ren + 1));
+	if (!erra)
 	{
 		free(histo_str);
 		return (127);
@@ -34,7 +34,7 @@ int fails_open(char *file_paths)
 
 	free(histo_str);
 	write(STDERR_FILENO, erra, ren);
-	free(error);
+	free(erra);
 	return (127);
 }
 
@@ -52,7 +52,7 @@ int proc_files_commands(char *file_paths, int *exec_ret)
 	ssize_t fil, s_red, y;
 	unsigned int linesize = 0;
 	unsigned int oldsize = 120;
-	char *line, **argd, **infront;
+	char *lin, **argb, **infront;
 	char buff[120];
 	int rett;
 
@@ -75,7 +75,7 @@ int proc_files_commands(char *file_paths, int *exec_ret)
 		lin = _reallocate(lin, oldsize, linesize);
 		_strcat(lin, buff);
 		oldsize = linesize;
-	} while (b_red);
+	} while (s_red);
 	for (y = 0; line[y] == '\n'; y++)
 		line[y] = ' ';
 	for (; y < linesize; y++)

@@ -59,7 +59,7 @@ char *fills_path(char *paths)
 	pwd = *(_getenv("PWD")) + 4;
 	for (y = 0; paths[y]; y++)
 	{
-		if (path[y] == ':')
+		if (paths[y] == ':')
 		{
 			if (paths[y + 1] == ':' || y == 0 || path[y + 1] == '\0')
 				lengt += _strlen(pwd) + 1;
@@ -108,7 +108,7 @@ list_t *gets_path(char *paths)
 {
 	int index;
 	char **dirs, *path_copy;
-	list_t *hed = NULL;
+	list_t *head = NULL;
 
 	path_copy = fills_path(paths);
 	if (!path_copy)
@@ -120,9 +120,9 @@ list_t *gets_path(char *paths)
 
 	for (index = 0; dirs[index]; index++)
 	{
-		if (add_node_end(&hed, dirs[index]) == NULL)
+		if (add_node_end(&head, dirs[index]) == NULL)
 		{
-			free_list(hed);
+			frees_list(head);
 			free(dirs);
 			return (NULL);
 		}
@@ -130,5 +130,5 @@ list_t *gets_path(char *paths)
 
 	free(dirs);
 
-	return (hed);
+	return (heda);
 }

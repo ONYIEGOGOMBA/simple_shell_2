@@ -28,9 +28,9 @@ alias_t *add_alias_end(alias_t **herd, char *name, char *value)
 	if (*herd)
 	{
 		last = *herd;
-		while (lass->next != NULL)
-			lass = lass->next;
-		lass->next = node_new;
+		while (last->next != NULL)
+			last = last->next;
+		last->next = node_new;
 	}
 	else
 		*herd = node_new;

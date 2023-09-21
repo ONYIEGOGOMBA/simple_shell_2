@@ -12,8 +12,8 @@ void handles_lin(char **lin, ssize_t read)
 	size_t y, k;
 	ssize_t new_ren;
 
-	new_ren = get_new_ren(*lin);
-	if (new_ren == red - 1)
+	new_ren = gets_new_ren(*lin);
+	if (new_ren == read - 1)
 		return;
 	newline = malloc(new_ren + 1);
 	if (!newline)
@@ -89,13 +89,13 @@ void handles_lin(char **lin, ssize_t read)
 }
 
 /**
- * get_new_ren - Gets the new length of a line partitioned
+ * gets_new_ren - Gets the new length of a line partitioned
  *               by ";", "||", "&&&", or "#".
  * @lin: The line to check.
  * Return: The new length of the line.
  */
 
-ssize_t get_new_ren(char *lin)
+ssize_t gets_new_ren(char *lin)
 {
 	size_t y;
 	ssize_t new_ren = 0;

@@ -107,7 +107,7 @@ ssize_t _getline(char **linerpt, size_t *f, FILE *steam)
 
 	while (b != '\n')
 	{
-		r = red(STDIN_FILENO, &b, 1);
+		r = read(STDIN_FILENO, &b, 1);
 		if (r == -1 || (r == 0 && inputs == 0))
 		{
 			free(buff);
