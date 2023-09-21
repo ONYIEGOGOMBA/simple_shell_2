@@ -1,74 +1,110 @@
 #include "shell.h"
-/**
- * _pputs - prints an input string
- * @srt: string to be printed
- * Return: return nothing
- */
-void _pputs(char *srt)
-{
-	int y = 0;
 
-	if (!srt)
-		return;
-	while (srt[y] != '\0')
+/**
+ * num_len - Counts the digit length of a number.
+ * @num: The number to measure.
+ *
+ * Return: The digit length.
+ */
+int ren_num(int num)
+{
+	unsigned int num_1;
+	int ren = 1;
+
+	if (num < 0)
 	{
-		_pputchar(srt[y]);
-		y++;
+		ren++;
+		num_1 = num * -1;
 	}
+	else
+	{
+		num_1 = num;
+	}
+	while (num_1 > 9)
+	{
+		ren++;
+		num_1 /= 10;
+	}
+
+	return (ren);
 }
-/**
- * _pputchar - it writes the character c
- * @c: the character to print
- * Return:1 on success
- */
-int _pputchar(char c)
-{
-	static int y;
-	static char buff[WRITE_BUF_SIZE];
 
-	if (c == BUF_FLUSH || y >= WRITE_BUF_SIZE)
+/**
+ * _atoi - Converts an integer to a string.
+ * @num: The integer.
+ *
+ * Return: The converted string.
+ */
+char *_atoi(int num)
+{
+	char *buff;
+	int ren = ren_num(num);
+	unsigned int num_1;
+
+	buff = malloc(sizeof(char) * (ren + 1));
+	if (!buff)
+		return (NULL);
+
+	buff[ren] = '\0';
+
+	if (num < 0)
 	{
-		write(2, buff, y);
-		y = 0;
+		num_1 = num * -1;
+		buff[0] = '-';
 	}
-	if (c != BUF_FLUSH)
-		buff[y++] = c;
-	return (1);
+	else
+	{
+		num_1 = num;
+	}
+
+	ren--;
+	do {
+		buff[len] = (num_1 % 10) + '0';
+		num_1 /= 10;
+		ren--;
+	} while (num_1 > 0);
+
+	return (buff);
 }
-/**
- * _putpd - writes the character c to given pd
- * @c: the character
- * @pd: The filedescriptor
- * Return: 1 on success
- */
-int _putpd(char c, int pd)
-{
-	static int y;
-	static char buff[WRITE_BUF_SIZE];
 
-	if (c == BUF_FLUSH || y >= WRITE_BUF_SIZE)
-	{
-		write(pd, buff, y);
-		y = 0;
-	}
-	if (c != BUF_FLUSH)
-		buff[y++] = c;
-	return (1);
-}
-/**
- * _putspd - prints an input string
- * @pd: filedescriptor
- * Return: returns number
- */
-int _putspd(char *srt, int pd)
-{
-	int y = 0;
 
-	if (!srt)
-		return (0);
-	while (*srt)
+/**
+ * creates_error - Writes a custom error message to stderr.
+ * @argb: An array of arguments.
+ * @err: The error value.
+ * Return: The error value.
+ */
+int creates_error(char **argb, int err)
+{
+	char *erra;
+
+	switch (err)
 	{
-		y += _putpd(*srt++, pd);
+	case -1:
+		erra = env_error(argb);
+		break;
+	case 1:
+		erra = error1(argb);
+		break;
+	case 2:
+		if (*(argb[0]) == 'e')
+			erra = exiterror_2(++argb);
+		else if (argb[0][0] == ';' || argb[0][0] == '&' || argb[0][0] == '|')
+			erra = syntaxerror_2(argb);
+		else
+			erra = cderror_2(argb);
+		break;
+	case 126:
+		erra = 126_error(argb);
+		break;
+	case 127:
+		erra = 127_error(argb);
+		break;
 	}
-	return (y);
+	write(STDERR_FILENO, erra, _strlen(erra));
+
+	if (erra)
+		free(erra);
+	return (err);
+
 }

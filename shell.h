@@ -1,201 +1,135 @@
 #ifndef _SHELL_H_
 #define _SHELL_H_
 
-#include <errno.h>
-#include <string.h>
+#include <fcntl.h>
+#include <signal.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <sys/wait.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <sys/stat.h>
-#include <limits.h>
-#include <fcntl.h>
+#include <errno.h>
+#include <stdio.h>
 
-#define READ_BUF_SIZE 1024
-#define WRITE_BUF_SIZE 1024
-#define BUF_FLUSH -1
+#define END_OF_FILE -2
+#define EXIT -3
 
-#define CMD_NORMAL	0
-#define CMD_ORR		1
-#define CMD_ANDD	2
-#define CMD_CHAINS	3
-
-#define CONVERT_LOWERCASE	1
-#define CONVERT_UNSIGNED	2
-
-#define HISTO_FILE	".simple_shell_history"
-#define HISTO_MAX	4096
-
+/* Global environemnt */
 extern char **environ;
+/* Global program name */
+char *name;
+/* Global history counter */
+int hist;
 
-typedef struct liststr
+/**
+ * struct list_s - A new struct type defining a linked list.
+ * @dir: A directory path.
+ * @next: A pointer to another struct list_s.
+ */
+typedef struct list_s
 {
-	int numb;
-	char *srt;
-	struct liststr *next;
+	char *dir;
+	struct list_s *next;
 } list_t;
-typedef struct infopass
+
+/**
+ * struct builtin_s - A new struct type defining builtin commands.
+ * @name: The name of the builtin command.
+ * @f: A function pointer to the builtin command's function.
+ */
+typedef struct builtin_s
 {
-	char *arg;
-	char **argv;
-	list_t *env;
-	int status;
-	int err_numb;
-	int readpd;
-	list_t *alias;
-	list_t *histo;
-	int argc;
-	char *fname;
-	unsigned int line_spell;
-	int linecount_lagg;
-	int histocount;
-	int cmd_puf_type;
-	char **envir;
-	list_t *envi;
-	int env_change;
-	char **cmd_puf;
-	char *paths;
-	char **environ;
+	char *name;
+	int (*f)(char **argv, char **infront);
+} builtin_t;
 
-
-
-
-
-
-
-}info_t;
-#define INFO_INIT \
-{NULL, NULL, NULL, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, \
-	0, 0, 0}
-
-struct info_t
+/**
+ * struct alias_s - A new struct defining aliases.
+ * @name: The name of the alias.
+ * @value: The value of the alias.
+ * @next: A pointer to another struct alias_s.
+ */
+typedef struct alias_s
 {
-	char *paths;
-};
+	char *name;
+	char *value;
+	struct alias_s *next;
+} alias_t;
 
-typedef struct builtin
-{
-	char typo;
-	int (*funct)(info_t *);
-} builtin_table;
+/* Global aliases linked list */
+alias_t *aliases;
 
-/* the builtin.c */
-int my_exit(info_t *);
-int my_cd(info_t *);
-int help_my(info_t *);
-
-/* the atoil.c*/
-int interact(info_t *);
-int is_dell(char, char *);
-int is_alpha(int);
-int a_toil(char *);
-
-/* the 1_builtin.c */
-int my_histo(info_t *);
-int my_alias(info_t *);
-
-/* the env.c */
-int my_env(info_t *);
-int my_setenv(info_t *);
-int my_unsetenv(info_t *);
-int pops_env_list(info_t *);
-char *get_env(info_t *, const char *);
-
-/* the error.c */
-void _pputs(char *);
-int _pputchar(char);
-int _putpd(char, int);
-int _putspd(char *, int);
-
-/* the error1.c */
-int _prratoi(char *);
-void prints_error(info_t *, char *);
-int print_f(int, int);
-char *number_converter(long int, int, int);
-void removes_comment(char *);
-
-/* the exit.c */
-char *_strmcat(char *, char *, int);
-char *_strhr(char *, char);
-char *_strmcpy(char *, char *, int);
-
-/* the getlin.c */
-ssize_t gets_input(info_t *);
-int get_line(info_t *, char **, size_t *);
-void signtHandler(int);
-
-/* the get_env.c */
-char **get_envir(info_t *);
-int unset_env(info_t *, char *);
-int set_env(info_t *, char *, char *);
-
-/* the get_info.c */
-void clears_info(info_t *);
-void sets_info(info_t *, char **);
-void frees_info(info_t *, int);
-
-/* the memory0.c */
-int cfree(void **);
-
-/* the parsers.c */
-int cmd_is(info_t *, char *);
-char *chars_dup(char *, int, int);
-char *finds_path(info_t *, char *, char *);
-
-/* the strung.c */
-char *start_with(const char *, const char *);
-int _strlen(char *);
-int _strcmp(char *, char *);
-char *_strcat(char *, char *);
-
-/* the reallocate.c */
-void pfree(char **);
-char *_setmem(char *, char, unsigned int);
+/* Main Helpers */
+ssize_t _getline(char **, size_t *, FILE *);
 void *_reallocate(void *, unsigned int, unsigned int);
+char **_strtok(char *, char *);
+char *gets_location(char *);
+list_t *gets_path(char *);
+int execute(char **, char **);
+void frees_list(list_t *);
+char *_atoi(int);
 
-/* the s_loop.c */
-void forks_cmd(info_t *);
-int finds_builtin(info_t *);
-void finds_cmd(info_t *);
-int ssh(info_t *, char **);
+/* Input Helpers */
+void handles_lin(char **, ssize_t);
+void var_replacement(char **, int *);
+char *gets_argb(char *, int *);
+int calls_argb(char **, char **, int *);
+int runs_argb(char **, char **, int *);
+int handles_argb(int *);
+int checks_argb(char **);
+void frees_argb(char **, char **);
+char **replaces_aliases(char **);
 
-/* the list.c */
-list_t *add_done(list_t **, const char *, int);
-list_t *add_done_end(list_t **, const char *, int);
-size_t print_lists_str(const list_t *);
-int delete_node(list_t **head, unsigned int index);
-void frees_lists(list_t **);
+/* String functions */
+int _strlen(const char *);
+char *_strcat(char *, const char *);
+char *_strncat(char *, const char *, size_t);
+char *_strcpy(char *, const char *);
+char *_strchr(char *, char);
+int _strspn(char *, char *);
+int _strcmp(char *, char *);
+int _strncmp(const char *, const char *, size_t);
 
-/* the list1.h */
-ssize_t list_lens(const list_t *);
-char **lists_to_string(list_t *);
-ssize_t prints_list(const list_t *);
-list_t *node_start(list_t *, char *, char);
-size_t get_node(list_t *, list_t *);
+/* Builtins */
+int (*builtin_get(char *))(char **, char **);
+int exit_shell(char **, char **);
+int env_shell(char **, char __attribute__((__unused__)) **);
+int setenv_shell(char **, char __attribute__((__unused__)) **);
+int unsetenv_shell(char **, char __attribute__((__unused__)) **);
+int cd_shell(char **, char __attribute__((__unused__)) **);
+int shell_alias(char **, char __attribute__((__unused__)) **);
+int help_shell(char **, char __attribute__((__unused__)) **);
 
-/* the strung1.c */
-int _putchar(char);
-char *_strcpy(char *, char *);
-void _puts(char *str);
-char *_strdup(const char *);
+/* Builtin Helpers */
+char **_copiesenv(void);
+void frees_env(void);
+char **_getenv(const char *);
 
-/* the mercury.c */
-void checks_chain(info_t *info, char *puf, size_t *a, size_t y, size_t ren);
-int its_chain(info_t *info, char *puf, size_t *a);
-int vars_replace(info_t *info);
-int alias_replace(info_t *info);
-int string_replace(char **, char *);
+/* Error Handling */
+int creates_error(char **, int);
+char *errorenv(char **);
+char *error1(char **);
+char *exiterror_2(char **);
+char *cderror_2(char **);
+char *syntaxerror_2(char **);
+char *126_error(char **);
+char *127_error(char **);
 
-/* the histo.c */
-char *get_histo_file(info_t *info);
-int write_histo(info_t *info);
-int read_histo(info_t *info);
-int build_histo_list(info_t *info, char *puf, int linespell);
-int renumber_histo(info_t *info);
+/* the Linkedlist.c */
+alias_t *add_alias_end(alias_t **, char *, char *);
+void frees_alias_list(alias_t *);
+list_t *add_node_end(list_t **, char *);
+void frees_list(list_t *);
 
-/* the tokens.c */
-char **strwot(char *, char *);
-char **strwot2(char *, char);
+void all_helps(void);
+void alias_helps(void);
+void cd_helps(void);
+void exit_helps(void);
+void help_helps(void);
+void _env(void);
+void _setenv(void);
+void _unsetenv(void);
+void _history(void);
 
+int proc_files_commands(char *file_path, int *exe_ret);
 #endif
