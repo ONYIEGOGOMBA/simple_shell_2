@@ -10,7 +10,7 @@ char *error_126(char **argb)
 	char *erra, *histo_str;
 	int ren;
 
-	histo_str = _atoi(histo);
+	histo_str = _atoi(hist);
 	if (!histo_str)
 		return (NULL);
 
@@ -43,7 +43,7 @@ char *error_127(char **argb)
 	char *erra, *histo_str;
 	int ren;
 
-	histo_str = _atoi(histo);
+	histo_str = _atoi(hist);
 	if (!histo_str)
 		return (NULL);
 

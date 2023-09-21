@@ -44,9 +44,9 @@ char *gets_location(char *comnd)
 }
 
 /**
- * fill_path - Copies path but also replaces leading/sandwiched/trailing
+ * fills_path - Copies path but also replaces leading/sandwiched/trailing
  *		   colons (:) with current working directory.
- * @path: The colon-separated list of directories.
+ * @paths: The colon-separated list of directories.
  *
  * Return: A copy of path with any leading/sandwiched/trailing colons replaced
  *	   with the current working directory.
@@ -61,7 +61,7 @@ char *fills_path(char *paths)
 	{
 		if (paths[y] == ':')
 		{
-			if (paths[y + 1] == ':' || y == 0 || path[y + 1] == '\0')
+			if (paths[y + 1] == ':' || y == 0 || paths[y + 1] == '\0')
 				lengt += _strlen(pwd) + 1;
 			else
 				lengt++;
@@ -75,7 +75,7 @@ char *fills_path(char *paths)
 	path_copy[0] = '\0';
 	for (y = 0; paths[y]; y++)
 	{
-		if (path[y] == ':')
+		if (paths[y] == ':')
 		{
 			if (y == 0)
 			{
@@ -130,5 +130,5 @@ list_t *gets_path(char *paths)
 
 	free(dirs);
 
-	return (heda);
+	return (head);
 }

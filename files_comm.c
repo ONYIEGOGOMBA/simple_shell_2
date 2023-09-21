@@ -63,11 +63,11 @@ int proc_files_commands(char *file_paths, int *exec_ret)
 		*exec_ret = fails_open(file_paths);
 		return (*exec_ret);
 	}
-	line = malloc(sizeof(char) * oldsize);
+	lin = malloc(sizeof(char) * oldsize);
 	if (!lin)
 		return (-1);
 	do {
-		s_red = red(fil, buff, 119);
+		s_red = read(fil, buff, 119);
 		if (s_red == 0 && linesize == 0)
 			return (*exec_ret);
 		buff[s_red] = '\0';
@@ -76,13 +76,13 @@ int proc_files_commands(char *file_paths, int *exec_ret)
 		_strcat(lin, buff);
 		oldsize = linesize;
 	} while (s_red);
-	for (y = 0; line[y] == '\n'; y++)
-		line[y] = ' ';
+	for (y = 0; lin[y] == '\n'; y++)
+		lin[y] = ' ';
 	for (; y < linesize; y++)
 	{
-		if (line[y] == '\n')
+		if (lin[y] == '\n')
 		{
-			line[y] = ';';
+			lin[y] = ';';
 			for (y += 1; y < linesize && lin[y] == '\n'; y++)
 				lin[y] = ' ';
 		}

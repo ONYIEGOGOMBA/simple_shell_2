@@ -7,7 +7,7 @@
  * Return: If an error occurs - NULL.
  *         Otherwise - a pointer to the stored command.
  */
-char *gets_argb(char *line, int *exe_ret)
+char *gets_argb(char *lin, int *exec_ret)
 {
 	size_t f = 0;
 	ssize_t read;
@@ -62,7 +62,7 @@ int calls_argb(char **argb, char **infront, int *exec_ret)
 			}
 			else
 			{
-				for (index++; args[index]; index++)
+				for (index++; argb[index]; index++)
 					free(argb[index]);
 				return (rett);
 			}
