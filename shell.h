@@ -57,7 +57,7 @@ typedef struct alias_s
 } alias_t;
 
 /* Global aliases linked list */
-alias_t *aliases;
+alias_t *aliass;
 
 /* Main Helpers */
 ssize_t _getline(char **, size_t *, FILE *);
