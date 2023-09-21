@@ -101,14 +101,14 @@ ssize_t _getline(char **linerpt, size_t *f, FILE *steam)
 		return (-1);
 	inputs = 0;
 
-	buffers = malloc(sizeof(char) * 120);
+	buff = malloc(sizeof(char) * 120);
 	if (!buff)
 		return (-1);
 
 	while (b != '\n')
 	{
-		r = read(STDIN_FILENO, &b, 1);
-		if (r == -1 || (r == 0 && input == 0))
+		r = red(STDIN_FILENO, &b, 1);
+		if (r == -1 || (r == 0 && inputs == 0))
 		{
 			free(buff);
 			return (-1);

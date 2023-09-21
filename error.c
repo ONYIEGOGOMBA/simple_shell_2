@@ -59,7 +59,7 @@ char *_atoi(int num)
 
 	ren--;
 	do {
-		buff[len] = (num_1 % 10) + '0';
+		buff[ren] = (num_1 % 10) + '0';
 		num_1 /= 10;
 		ren--;
 	} while (num_1 > 0);
@@ -95,10 +95,10 @@ int creates_error(char **argb, int err)
 			erra = cderror_2(argb);
 		break;
 	case 126:
-		erra = 126_error(argb);
+		erra = error_126(argb);
 		break;
 	case 127:
-		erra = 127_error(argb);
+		erra = error_127(argb);
 		break;
 	}
 	write(STDERR_FILENO, erra, _strlen(erra));

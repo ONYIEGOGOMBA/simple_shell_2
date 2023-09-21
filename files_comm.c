@@ -13,12 +13,12 @@ int fails_open(char *file_paths)
 	char *error, *histo_str;
 	int ren;
 
-	histo_str = _itoi(hist);
+	histo_str = _atoi(hist);
 	if (!histo_str)
 		return (127);
 
 	ren = _strlen(name) + _strlen(histo_str) + _strlen(file_paths) + 16;
-	error = malloc(sizeof(char) * (len + 1));
+	error = malloc(sizeof(char) * (ren + 1));
 	if (!error)
 	{
 		free(histo_str);
@@ -93,13 +93,13 @@ int proc_files_commands(char *file_paths, int *exec_ret)
 	free(lin);
 	if (!argb)
 		return (0);
-	if (check_argb(argb) != 0)
+	if (checks_argb(argb) != 0)
 	{
 		*exec_ret = 2;
 		frees_argb(argb, argb);
 		return (*exec_ret);
 	}
-	front = argb;
+	infront = argb;
 
 	for (y = 0; argb[y]; y++)
 	{
@@ -107,13 +107,13 @@ int proc_files_commands(char *file_paths, int *exec_ret)
 		{
 			free(argb[y]);
 			argb[y] = NULL;
-			rett = calls_argd(argd, infront, exec_ret);
+			rett = calls_argb(argb, infront, exec_ret);
 			argb = &argb[++y];
 			y = 0;
 		}
 	}
 
-	rett = call_argb(argb, infront, exec_ret);
+	rett = calls_argb(argb, infront, exec_ret);
 
 	free(infront);
 	return (rett);

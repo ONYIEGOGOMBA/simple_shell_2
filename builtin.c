@@ -37,24 +37,24 @@ int (*builtin_get(char *comnd))(char **argd, char **infront)
  *         If the given exit value is invalid - 2.
  *         O/w - exits with the given status value.
  */
-int exit_shell(char **argd, char **infront)
+int exit_shell(char **argb, char **infront)
 {
 	int y, ren_of_int = 10;
 	unsigned int num = 0, maxx = 1 << (sizeof(int) * 8 - 1);
 
-	if (argd[0])
+	if (argb[0])
 	{
-		if (argd[0][0] == '+')
+		if (argb[0][0] == '+')
 		{
 			y = 1;
 			ren_of_int++;
 		}
-		for (; argd[0][y]; y++)
+		for (; argb[0][y]; y++)
 		{
-			if (y <= ren_of_int && argd[0][y] >= '0' && argd[0][y] <= '9')
-				num = (num * 10) + (argd[0][y] - '0');
+			if (y <= ren_of_int && argb[0][y] >= '0' && argb[0][y] <= '9')
+				num = (num * 10) + (argb[0][y] - '0');
 			else
-				return (creates_error(--argd, 2));
+				return (creates_error(--argb, 2));
 		}
 	}
 	else
@@ -64,7 +64,7 @@ int exit_shell(char **argd, char **infront)
 	if (num > maxx - 1)
 		return (creates_error(--argb, 2));
 	argb -= 1;
-	frees_argd(argb, infront);
+	frees_argb(argb, infront);
 	frees_env();
 	frees_alias_list(aliass);
 	exit(num);
@@ -100,7 +100,7 @@ int cd_shell(char **argb, char __attribute__((__unused__)) **infront)
 			}
 			else
 			{
-				free(oldp_wd);
+				free(old_pwd);
 				return (creates_error(argb, 2));
 			}
 		}
@@ -131,7 +131,7 @@ int cd_shell(char **argb, char __attribute__((__unused__)) **infront)
 		return (-1);
 
 	info_dir[0] = "OLDPWD";
-	info_dir[1] = oldpwd;
+	info_dir[1] = old_pwd;
 	if (setenv_shell(info_dir, info_dir) == -1)
 		return (-1);
 
@@ -166,7 +166,7 @@ int help_shell(char **argb, char __attribute__((__unused__)) **infront)
 	else if (_strcmp(argb[0], "cd") == 0)
 		cd_helps();
 	else if (_strcmp(argb[0], "exit") == 0)
-		exit_help();
+		exit_helps();
 	else if (_strcmp(argb[0], "env") == 0)
 		_env();
 	else if (_strcmp(argb[0], "setenv") == 0)

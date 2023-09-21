@@ -1,93 +1,88 @@
 #include "shell.h"
-
-char *fill_path_dir(char *path);
-list_t *get_path_dir(char *path);
-
 /**
- * get_location - Locates a command in the PATH.
- * @command: The command to locate.
- *
+ * gets_location - Locates a command in the PATH.
+ * @comnd: The command to locate.
  * Return: If an error occurs or the command cannot be located - NULL.
  *         Otherwise - the full pathname of the command.
  */
-char *get_location(char *command)
+char *gets_location(char *comnd)
 {
-	char **path, *temp;
-	list_t *dirs, *head;
+	char **paths, *tem;
+	list_t *dirs, *hed;
 	struct stat st;
 
-	path = _getenv("PATH");
-	if (!path || !(*path))
+	paths = _getenv("PATH");
+	if (!paths || !(*paths))
 		return (NULL);
 
-	dirs = get_path_dir(*path + 5);
-	head = dirs;
+	dirs = gets_path(*paths + 5);
+	hed = dirs;
 
 	while (dirs)
 	{
-		temp = malloc(_strlen(dirs->dir) + _strlen(command) + 2);
-		if (!temp)
+		tem = malloc(_strlen(dirs->dir) + _strlen(comnd) + 2);
+		if (!tem)
 			return (NULL);
 
-		_strcpy(temp, dirs->dir);
-		_strcat(temp, "/");
-		_strcat(temp, command);
+		_strcpy(tem, dirs->dir);
+		_strcat(tem, "/");
+		_strcat(tem, comnd);
 
-		if (stat(temp, &st) == 0)
+		if (stat(tem, &st) == 0)
 		{
-			free_list(head);
-			return (temp);
+			frees_list(hed);
+			return (tem);
 		}
 
 		dirs = dirs->next;
-		free(temp);
+		free(tem);
 	}
 
-	free_list(head);
+	frees_list(hed);
 
 	return (NULL);
 }
 
 /**
- * fill_path_dir - Copies path but also replaces leading/sandwiched/trailing
+ * fill_path - Copies path but also replaces leading/sandwiched/trailing
  *		   colons (:) with current working directory.
  * @path: The colon-separated list of directories.
  *
  * Return: A copy of path with any leading/sandwiched/trailing colons replaced
  *	   with the current working directory.
  */
-char *fill_path_dir(char *path)
+char *fills_path(char *paths)
 {
-	int i, length = 0;
+	int y, lengt = 0;
 	char *path_copy, *pwd;
 
 	pwd = *(_getenv("PWD")) + 4;
-	for (i = 0; path[i]; i++)
+	for (y = 0; paths[y]; y++)
 	{
-		if (path[i] == ':')
+		if (path[y] == ':')
 		{
-			if (path[i + 1] == ':' || i == 0 || path[i + 1] == '\0')
-				length += _strlen(pwd) + 1;
+			if (paths[y + 1] == ':' || y == 0 || path[y + 1] == '\0')
+				lengt += _strlen(pwd) + 1;
 			else
-				length++;
+				lengt++;
 		}
 		else
-			length++;
+			lengt++;
 	}
-	path_copy = malloc(sizeof(char) * (length + 1));
+	path_copy = malloc(sizeof(char) * (lengt + 1));
 	if (!path_copy)
 		return (NULL);
 	path_copy[0] = '\0';
-	for (i = 0; path[i]; i++)
+	for (y = 0; paths[y]; y++)
 	{
-		if (path[i] == ':')
+		if (path[y] == ':')
 		{
-			if (i == 0)
+			if (y == 0)
 			{
 				_strcat(path_copy, pwd);
 				_strcat(path_copy, ":");
 			}
-			else if (path[i + 1] == ':' || path[i + 1] == '\0')
+			else if (paths[y + 1] == ':' || paths[y + 1] == '\0')
 			{
 				_strcat(path_copy, ":");
 				_strcat(path_copy, pwd);
@@ -97,26 +92,25 @@ char *fill_path_dir(char *path)
 		}
 		else
 		{
-			_strncat(path_copy, &path[i], 1);
+			_strncat(path_copy, &paths[y], 1);
 		}
 	}
 	return (path_copy);
 }
 
 /**
- * get_path_dir - Tokenizes a colon-separated list of
+ * gets_path - Tokenizes a colon-separated list of
  *                directories into a list_s linked list.
- * @path: The colon-separated list of directories.
- *
+ * @paths: The colon-separated list of directories.
  * Return: A pointer to the initialized linked list.
  */
-list_t *get_path_dir(char *path)
+list_t *gets_path(char *paths)
 {
 	int index;
 	char **dirs, *path_copy;
-	list_t *head = NULL;
+	list_t *hed = NULL;
 
-	path_copy = fill_path_dir(path);
+	path_copy = fills_path(paths);
 	if (!path_copy)
 		return (NULL);
 	dirs = _strtok(path_copy, ":");
@@ -126,9 +120,9 @@ list_t *get_path_dir(char *path)
 
 	for (index = 0; dirs[index]; index++)
 	{
-		if (add_node_end(&head, dirs[index]) == NULL)
+		if (add_node_end(&hed, dirs[index]) == NULL)
 		{
-			free_list(head);
+			free_list(hed);
 			free(dirs);
 			return (NULL);
 		}
@@ -136,5 +130,5 @@ list_t *get_path_dir(char *path)
 
 	free(dirs);
 
-	return (head);
+	return (hed);
 }

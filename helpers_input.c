@@ -1,208 +1,197 @@
 #include "shell.h"
 
-char *get_args(char *line, int *exe_ret);
-int call_args(char **args, char **front, int *exe_ret);
-int run_args(char **args, char **front, int *exe_ret);
-int handle_args(int *exe_ret);
-int check_args(char **args);
-
 /**
- * get_args - Gets a command from standard input.
- * @line: A buffer to store the command.
- * @exe_ret: The return value of the last executed command.
- *
+ * gets_argb - Gets a command from standard input.
+ * @lin: A buffer to store the command.
+ * @exec_ret: The return value of the last executed command.
  * Return: If an error occurs - NULL.
  *         Otherwise - a pointer to the stored command.
  */
-char *get_args(char *line, int *exe_ret)
+char *gets_argb char *line, int *exe_ret)
 {
-	size_t n = 0;
-	ssize_t read;
-	char *prompt = "$ ";
+	size_t f = 0;
+	ssize_t red;
+	char *promp = "$ ";
 
-	if (line)
-		free(line);
+	if (lin)
+		free(lin);
 
-	read = _getline(&line, &n, STDIN_FILENO);
+	red = _getline(&lin, &f, STDIN_FILENO);
 	if (read == -1)
 		return (NULL);
-	if (read == 1)
+	if (red == 1)
 	{
 		hist++;
 		if (isatty(STDIN_FILENO))
-			write(STDOUT_FILENO, prompt, 2);
-		return (get_args(line, exe_ret));
+			write(STDOUT_FILENO, promp, 2);
+		return (gets_argb(lin, exec_ret));
 	}
 
-	line[read - 1] = '\0';
-	variable_replacement(&line, exe_ret);
-	handle_line(&line, read);
+	lin[read - 1] = '\0';
+	var_replacement(&lin, exec_ret);
+	handles_lin(&lin, re);
 
-	return (line);
+	return (lin);
 }
 
 /**
- * call_args - Partitions operators from commands and calls them.
- * @args: An array of arguments.
- * @front: A double pointer to the beginning of args.
- * @exe_ret: The return value of the parent process' last executed command.
- *
+ * calls_argb - Partitions operators from commands and calls them.
+ * @argb: An array of arguments.
+ * @infront: A double pointer to the beginning of args.
+ * @exec_ret: The return value of the parent process' last executed command.
  * Return: The return value of the last executed command.
  */
-int call_args(char **args, char **front, int *exe_ret)
+int calls_argb(char **argb, char **infront, int *exec_ret)
 {
-	int ret, index;
+	int rett, index;
 
-	if (!args[0])
-		return (*exe_ret);
-	for (index = 0; args[index]; index++)
+	if (!argb[0])
+		return (*exec_ret);
+	for (index = 0; argb[index]; index++)
 	{
-		if (_strncmp(args[index], "||", 2) == 0)
+		if (_strncmp(argb[index], "||", 2) == 0)
 		{
-			free(args[index]);
-			args[index] = NULL;
-			args = replace_aliases(args);
-			ret = run_args(args, front, exe_ret);
-			if (*exe_ret != 0)
+			free(argb[index]);
+			argb[index] = NULL;
+			argb = replaces_aliases(args);
+			ret = runs_argb(argb, infront, exec_ret);
+			if (*exec_ret != 0)
 			{
-				args = &args[++index];
+				argb = &argb[++index];
 				index = 0;
 			}
 			else
 			{
 				for (index++; args[index]; index++)
-					free(args[index]);
-				return (ret);
+					free(argb[index]);
+				return (rett);
 			}
 		}
-		else if (_strncmp(args[index], "&&", 2) == 0)
+		else if (_strncmp(argb[index], "&&", 2) == 0)
 		{
-			free(args[index]);
-			args[index] = NULL;
-			args = replace_aliases(args);
-			ret = run_args(args, front, exe_ret);
-			if (*exe_ret == 0)
+			free(argb[index]);
+			argb[index] = NULL;
+			argb = replaces_aliases(argb);
+			rett = runs_argb(argb, infront, exec_ret);
+			if (*exec_ret == 0)
 			{
-				args = &args[++index];
+				argb = &argb[++index];
 				index = 0;
 			}
 			else
 			{
-				for (index++; args[index]; index++)
-					free(args[index]);
-				return (ret);
+				for (index++; argb[index]; index++)
+					free(argb[index]);
+				return (rett);
 			}
 		}
 	}
-	args = replace_aliases(args);
-	ret = run_args(args, front, exe_ret);
-	return (ret);
+	argb = replaces_aliases(argb);
+	rett = runs_argb(argb, infront, exec_ret);
+	return (rett);
 }
 
 /**
- * run_args - Calls the execution of a command.
- * @args: An array of arguments.
- * @front: A double pointer to the beginning of args.
- * @exe_ret: The return value of the parent process' last executed command.
- *
+ * runs_argb - Calls the execution of a command.
+ * @argb: An array of arguments.
+ * @infront: A double pointer to the beginning of args.
+ * @exec_ret: The return value of the parent process' last executed command.
  * Return: The return value of the last executed command.
  */
-int run_args(char **args, char **front, int *exe_ret)
+int runs_argb(char **argb, char **infront, int *exec_ret)
 {
-	int ret, i;
-	int (*builtin)(char **args, char **front);
+	int rett, y;
+	int (*builtin)(char **argb, char **infront);
 
-	builtin = get_builtin(args[0]);
+	builtin = builtin_get(argb[0]);
 
 	if (builtin)
 	{
-		ret = builtin(args + 1, front);
-		if (ret != EXIT)
-			*exe_ret = ret;
+		rett = builtin(argb + 1, infront);
+		if (rett != EXIT)
+			*exec_ret = rett;
 	}
 	else
 	{
-		*exe_ret = execute(args, front);
-		ret = *exe_ret;
+		*exec_ret = execute(argb, infront);
+		rett = *exec_ret;
 	}
 
 	hist++;
 
-	for (i = 0; args[i]; i++)
-		free(args[i]);
+	for (y = 0; argb[y]; y++)
+		free(argb[y]);
 
-	return (ret);
+	return (rett);
 }
 
 /**
- * handle_args - Gets, calls, and runs the execution of a command.
- * @exe_ret: The return value of the parent process' last executed command.
- *
+ * handles_argb - Gets, calls, and runs the execution of a command.
+ * @exec_ret: The return value of the parent process' last executed command.
  * Return: If an end-of-file is read - END_OF_FILE (-2).
  *         If the input cannot be tokenized - -1.
  *         O/w - The exit value of the last executed command.
  */
-int handle_args(int *exe_ret)
+int handles_argb(int *exec_ret)
 {
-	int ret = 0, index;
-	char **args, *line = NULL, **front;
+	int rett = 0, index;
+	char **argb, *lin = NULL, **infront;
 
-	line = get_args(line, exe_ret);
-	if (!line)
+	lin = gets_argb(lin, exec_ret);
+	if (!lin)
 		return (END_OF_FILE);
 
-	args = _strtok(line, " ");
-	free(line);
-	if (!args)
-		return (ret);
-	if (check_args(args) != 0)
+	argb = _strtok(lin, " ");
+	free(lin);
+	if (!argb)
+		return (rett);
+	if (checks_argb(argb) != 0)
 	{
-		*exe_ret = 2;
-		free_args(args, args);
-		return (*exe_ret);
+		*exec_ret = 2;
+		frees_argb(argb, argb);
+		return (*exec_ret);
 	}
-	front = args;
+	infront = argb;
 
-	for (index = 0; args[index]; index++)
+	for (index = 0; argb[index]; index++)
 	{
-		if (_strncmp(args[index], ";", 1) == 0)
+		if (_strncmp(argb[index], ";", 1) == 0)
 		{
-			free(args[index]);
-			args[index] = NULL;
-			ret = call_args(args, front, exe_ret);
-			args = &args[++index];
+			free(argb[index]);
+			argb[index] = NULL;
+			rett = calls_argb(argb, infront, exec_ret);
+			argb = &argb[++index];
 			index = 0;
 		}
 	}
-	if (args)
-		ret = call_args(args, front, exe_ret);
+	if (argb)
+		rett = calls_argb(argb, infront, exec_ret);
 
-	free(front);
-	return (ret);
+	free(infront);
+	return (rett);
 }
 
 /**
- * check_args - Checks if there are any leading ';', ';;', '&&', or '||'.
- * @args: 2D pointer to tokenized commands and arguments.
- *
+ * checks_argb - Checks if there are any leading ';', ';;', '&&', or '||'.
+ * @argb: 2D pointer to tokenized commands and arguments.
  * Return: If a ';', '&&', or '||' is placed at an invalid position - 2.
  *	   Otherwise - 0.
  */
-int check_args(char **args)
+int checks_argb(char **argb)
 {
-	size_t i;
-	char *cur, *nex;
+	size_t y;
+	char *curr, *necs;
 
-	for (i = 0; args[i]; i++)
+	for (y = 0; argb[y]; y++)
 	{
-		cur = args[i];
-		if (cur[0] == ';' || cur[0] == '&' || cur[0] == '|')
+		curr = argb[y];
+		if (curr[0] == ';' || curr[0] == '&' || curr[0] == '|')
 		{
-			if (i == 0 || cur[1] == ';')
-				return (create_error(&args[i], 2));
-			nex = args[i + 1];
-			if (nex && (nex[0] == ';' || nex[0] == '&' || nex[0] == '|'))
-				return (create_error(&args[i + 1], 2));
+			if (y == 0 || curr[1] == ';')
+				return (creates_error(&argb[y], 2));
+			necs = argb[y + 1];
+			if (necs && (necs[0] == ';' || necs[0] == '&' || necs[0] == '|'))
+				return (creates_error(&argb[y + 1], 2));
 		}
 	}
 	return (0);

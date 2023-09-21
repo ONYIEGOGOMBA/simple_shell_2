@@ -112,8 +112,8 @@ char *error1(char **);
 char *exiterror_2(char **);
 char *cderror_2(char **);
 char *syntaxerror_2(char **);
-char *126_error(char **);
-char *127_error(char **);
+char *error_126(char **);
+char *error_127(char **);
 
 /* the Linkedlist.c */
 alias_t *add_alias_end(alias_t **, char *, char *);

@@ -5,7 +5,7 @@
  * @lin: A pointer to a line read from standard input.
  * @red: The length of line.
  */
-void handles_lin(char **line, ssize_t read)
+void handles_lin(char **lin, ssize_t read)
 {
 	char *old_lin, *newline;
 	char past, present, next;
@@ -41,7 +41,7 @@ void handles_lin(char **line, ssize_t read)
 					newline[k++] = ' ';
 					continue;
 				}
-				if (ast != ' ')
+				if (past != ' ')
 					newline[k++] = ' ';
 				newline[k++] = ';';
 				if (next != ' ')
