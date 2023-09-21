@@ -7,7 +7,7 @@
  * Return: If c is found - a pointer to the first occurence.
  *         If c is not found - NULL.
  */
-char *_strchr(char *s, char c)
+char *_strchr(char *m, char b)
 {
 	int index;
 
@@ -27,7 +27,7 @@ char *_strchr(char *s, char c)
  * Return: The number of bytes in s which
  *         consist only of bytes from accept.
  */
-int _strspn(char *s, char *accept)
+int _strspn(char *m, char *axep)
 {
 	int byets = 0;
 	int index;
@@ -44,7 +44,7 @@ int _strspn(char *s, char *accept)
 		}
 		m++;
 	}
-	return (bytes);
+	return (byets);
 }
 
 /**

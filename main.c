@@ -55,7 +55,7 @@ int executes(char **argb, char **infront)
 				rett = (creates_error(argb, 126));
 			frees_env();
 			frees_argb(argb, infront);
-			frees_alias_list(aliass);
+			frees_alias_list(aliases);
 			_exit(rett);
 		}
 		else
@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
 
 	name = argv[0];
 	hist = 1;
-	aliass = NULL;
+	aliases = NULL;
 	signal(SIGINT, sign_handler);
 
 	*exec_ret = 0;
